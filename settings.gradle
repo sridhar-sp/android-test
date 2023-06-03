@@ -6,5 +6,5 @@ pluginManagement {
     }
 }
 
-rootProject.name = "android-template-repo"
+rootProject.name = 'Android test tutorial'
 include ':app'
