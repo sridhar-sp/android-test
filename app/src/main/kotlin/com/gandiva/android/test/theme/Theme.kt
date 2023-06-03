@@ -1,4 +1,4 @@
-package com.template.ui.theme
+package com.gandiva.android.test.theme
 
 import android.app.Activity
 import android.os.Build

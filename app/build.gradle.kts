@@ -5,17 +5,17 @@ plugins {
 }
 
 android {
-    namespace = "com.template"
+    namespace = AppConfig.namespace
     compileSdk = AppConfig.compileSdk
 
     defaultConfig {
-        applicationId = "com.template"
+        applicationId =  AppConfig.applicationId
         minSdk = AppConfig.minSdk
         targetSdk = AppConfig.targetSdk
         versionCode = AppConfig.versionCode
         versionName = AppConfig.versionName
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = AppConfig.androidTestInstrumentation
         vectorDrawables {
             useSupportLibrary = true
         }

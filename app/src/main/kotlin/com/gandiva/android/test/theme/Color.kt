@@ -1,4 +1,4 @@
-package com.template.ui.theme
+package com.gandiva.android.test.theme
 
 import androidx.compose.ui.graphics.Color
 
