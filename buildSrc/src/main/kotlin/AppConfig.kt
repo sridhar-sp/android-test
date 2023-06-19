@@ -1,6 +1,6 @@
 object AppConfig {
-    const val namespace = "com.gandiva.android.test"
-    const val applicationId = "com.gandiva.android.test"
+    const val namespace = "com.gandiva.android.sample"
+    const val applicationId = "com.gandiva.android.sample"
     const val compileSdk = 33
     const val minSdk = 21
     const val targetSdk = 33
