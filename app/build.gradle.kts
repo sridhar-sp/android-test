@@ -42,9 +42,11 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = AppConfig.composeVersion
     }
-    packagingOptions {
+    packaging {
         resources {
-            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+            excludes.add("/META-INF/{AL2.0,LGPL2.1}")
+            excludes.add("META-INF/LICENSE.md")
+            excludes.add("META-INF/LICENSE-notice.md")
         }
     }
 }
@@ -65,12 +67,18 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.dagger.hilt)
     implementation(libs.androidx.hilt.navigation.compose)
+    implementation("androidx.test:runner:1.5.2")
     kapt(libs.dagger.hilt.compiler)
 
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
     androidTestImplementation(platform(libs.androidx.compose.bom))
+    androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    androidTestImplementation("com.google.dagger:hilt-android-testing:2.44")
+    androidTestImplementation(libs.mockk.agent)
+    androidTestImplementation(libs.mockk.android)
+    kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.44")
     testImplementation(libs.junit4)
     testImplementation(libs.mockk)
     testImplementation(libs.truth)

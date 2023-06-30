@@ -9,7 +9,7 @@ object AppConfig {
 
     const val composeVersion = "1.4.3"
 
-    const val androidTestInstrumentation = "androidx.test.runner.AndroidJUnitRunner"
+    const val androidTestInstrumentation = "com.gandiva.android.sample.AndroidHiltTestRunner"
     const val proguardConsumerRules =  "consumer-rules.pro"
     const val dimension = "environment"
 }
