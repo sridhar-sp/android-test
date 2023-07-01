@@ -6,7 +6,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.MutableStateFlow
 import javax.inject.Inject
 
 @HiltViewModel
@@ -23,8 +22,6 @@ class LoginViewModel @Inject constructor() : ViewModel() {
 
     var loginState by mutableStateOf<LoginState>(LoginState.InProgress)
         private set
-
-    var loginSnapshotFlow: MutableStateFlow<LoginState> = MutableStateFlow(LoginState.InProgress)
 
     fun updateEmail(emailInput: String) {
         email = emailInput.trim().filterNot(Char::isSurrogate)
@@ -45,7 +42,6 @@ class LoginViewModel @Inject constructor() : ViewModel() {
 
     fun login() {
         loginState = LoginState.LoginSuccess
-        loginSnapshotFlow.value = LoginState.LoginSuccess
     }
 
 }

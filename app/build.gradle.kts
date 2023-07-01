@@ -78,10 +78,10 @@ dependencies {
     androidTestImplementation("com.google.dagger:hilt-android-testing:2.44")
     androidTestImplementation(libs.mockk.agent)
     androidTestImplementation(libs.mockk.android)
+    androidTestImplementation(libs.truth)
     kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.44")
     testImplementation(libs.junit4)
     testImplementation(libs.mockk)
     testImplementation(libs.truth)
-
 
 }
