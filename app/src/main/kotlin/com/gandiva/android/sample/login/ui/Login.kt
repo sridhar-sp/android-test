@@ -31,7 +31,6 @@ fun Login(onSuccess: (email: String) -> Unit, viewModel: LoginViewModel = hiltVi
         if (viewModel.loginState == LoginState.LoginSuccess) onSuccess(viewModel.email)
     })
 
-
     Column(
         modifier = Modifier
             .fillMaxSize()

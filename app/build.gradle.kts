@@ -10,7 +10,7 @@ android {
     compileSdk = AppConfig.compileSdk
 
     defaultConfig {
-        applicationId =  AppConfig.applicationId
+        applicationId = AppConfig.applicationId
         minSdk = AppConfig.minSdk
         targetSdk = AppConfig.targetSdk
         versionCode = AppConfig.versionCode
@@ -49,6 +49,11 @@ android {
             excludes.add("META-INF/LICENSE-notice.md")
         }
     }
+    testOptions {
+        unitTests {
+            isIncludeAndroidResources = true
+        }
+    }
 }
 
 dependencies {
@@ -76,11 +81,15 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     androidTestImplementation("com.google.dagger:hilt-android-testing:2.44")
+    kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.44")
+
     androidTestImplementation(libs.mockk.agent)
     androidTestImplementation(libs.mockk.android)
     androidTestImplementation(libs.truth)
-    kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.44")
+
     testImplementation(libs.junit4)
+    testImplementation(libs.androidx.compose.ui.test.junit4)
+    testImplementation(libs.robolectric)
     testImplementation(libs.mockk)
     testImplementation(libs.truth)
 
