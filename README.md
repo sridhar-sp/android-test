@@ -30,5 +30,15 @@ These frameworks are often used for integration testing, which involves testing 
 
 It's important to note that some frameworks, such as Robolectric, can be used for both unit testing and integration testing, depending on how they are configured and used in your tests. Additionally, the categorization of frameworks can vary based on individual usage and project requirements.
 
+Reference:
+https://developer.android.com/training/testing/instrumented-tests/ui-tests
+https://developer.android.com/jetpack/compose/testing
+https://developer.android.com/studio/test/test-in-android-studio
+https://developer.android.com/training/dependency-injection/hilt-testing
+https://developer.android.com/training/testing/other-components/ui-automator
+
+
 Todo:
 Screenshot test
+Small brief on junit rules, test apk
+Mock vs Stub

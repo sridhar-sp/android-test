@@ -19,7 +19,7 @@ class ProfileTest {
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    val profileViewModel: ProfileViewModel = mockk()
+    private val profileViewModel: ProfileViewModel = mockk()
 
     @Before
     fun init() {
