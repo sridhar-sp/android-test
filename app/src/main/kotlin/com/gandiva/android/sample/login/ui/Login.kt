@@ -10,9 +10,13 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
+import androidx.compose.ui.semantics.testTagsAsResourceId
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -23,6 +27,7 @@ import com.gandiva.android.sample.theme.appDimens
 import timber.log.Timber
 
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun Login(onSuccess: (email: String) -> Unit, viewModel: LoginViewModel = hiltViewModel()) {
 
@@ -42,30 +47,25 @@ fun Login(onSuccess: (email: String) -> Unit, viewModel: LoginViewModel = hiltVi
             text = stringResource(id = R.string.login),
             style = MaterialTheme.typography.headlineMedium
         )
-        EmailInput(
-            modifier = Modifier
-                .testTag("emailInput")
-                .fillMaxWidth()
-                .padding(bottom = MaterialTheme.appDimens.largeContentPadding),
+        EmailInput(modifier = Modifier
+            .semantics { testTagsAsResourceId = true;testTag = "emailInput" }
+            .testTag("emailInput")
+            .fillMaxWidth()
+            .padding(bottom = MaterialTheme.appDimens.largeContentPadding),
             value = viewModel.email,
-            onValueChange = viewModel::updateEmail
-        )
-        PasswordInput(
-            modifier = Modifier
-                .testTag("passwordInput")
-                .fillMaxWidth()
-                .padding(bottom = MaterialTheme.appDimens.mediumContentPadding),
+            onValueChange = viewModel::updateEmail)
+        PasswordInput(modifier = Modifier
+            .semantics { testTagsAsResourceId = true;testTag = "passwordInput" }
+            .fillMaxWidth()
+            .padding(bottom = MaterialTheme.appDimens.mediumContentPadding),
             value = viewModel.password,
-            onValueChange = viewModel::updatePassword
-        )
-        PrimaryButton(
-            modifier = Modifier
-                .testTag("loginButton")
-                .fillMaxWidth(),
+            onValueChange = viewModel::updatePassword)
+        PrimaryButton(modifier = Modifier
+            .semantics { testTagsAsResourceId = true;testTag = "loginButton" }
+            .fillMaxWidth(),
             text = stringResource(id = R.string.login),
             enabled = viewModel.isLoginButtonEnabled,
-            onClick = viewModel::login
-        )
+            onClick = viewModel::login)
     }
 }
 

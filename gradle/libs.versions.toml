@@ -8,12 +8,15 @@ androidxAppcompat = "1.6.0"
 junit4 = "4.13.2"
 androidxComposeUiTooling = "1.4.0"
 daggerHilt = "2.44.2"
+daggerHiltAndroidTesting = "2.44"
 androidxHiltNavigationCompose = "1.0.0"
 androidxNavigationUiKtx = "2.5.3"
 timber = "5.0.1"
 mockkVersion = "1.13.5"
 truthVersion = "1.1.4"
 roboelectricVersion = "4.10.3"
+uiautomatorVersion = "2.2.0"
+androidxTestRunner = "1.5.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
@@ -29,6 +32,7 @@ androidx-compose-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-te
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidxAppcompat" }
 androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "androidxNavigationUiKtx" }
 dagger-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref = "daggerHilt" }
+dagger-hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "daggerHilt" }
 dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "daggerHilt" }
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidxHiltNavigationCompose" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
@@ -37,7 +41,9 @@ mockk = { group = "io.mockk", name = "mockk", version.ref = "mockkVersion" }
 mockk-android = { group = "io.mockk", name = "mockk-android", version.ref = "mockkVersion" }
 mockk-agent = { group = "io.mockk", name = "mockk-agent", version.ref = "mockkVersion" }
 truth = { group = "com.google.truth", name = "truth", version.ref = "truthVersion" }
-robolectric ={ group="org.robolectric",name="robolectric", version.ref="roboelectricVersion"}
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "roboelectricVersion" }
+androidx-test-uiautomator = { group = "androidx.test.uiautomator", name = "uiautomator", version.ref = "uiautomatorVersion" }
+androidx-test-runner = { group = "androidx.test", name = "runner", version.ref = "androidxTestRunner" }
 
 [plugins]
 

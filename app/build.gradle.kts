@@ -72,16 +72,16 @@ dependencies {
     implementation(libs.androidx.navigation.ui.ktx)
     implementation(libs.dagger.hilt)
     implementation(libs.androidx.hilt.navigation.compose)
-    implementation("androidx.test:runner:1.5.2")
+    implementation(libs.androidx.test.runner)
     kapt(libs.dagger.hilt.compiler)
 
     debugImplementation(libs.androidx.compose.ui.tooling)
-    debugImplementation(libs.androidx.compose.ui.test.manifest)
 
+    debugImplementation(libs.androidx.compose.ui.test.manifest)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
-    androidTestImplementation("com.google.dagger:hilt-android-testing:2.44")
-    kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.44")
+    androidTestImplementation(libs.dagger.hilt.android.testing)
+    kaptAndroidTest(libs.dagger.hilt.compiler)
 
     androidTestImplementation(libs.mockk.agent)
     androidTestImplementation(libs.mockk.android)
@@ -93,4 +93,5 @@ dependencies {
     testImplementation(libs.mockk)
     testImplementation(libs.truth)
 
+    androidTestImplementation(libs.androidx.test.uiautomator)
 }

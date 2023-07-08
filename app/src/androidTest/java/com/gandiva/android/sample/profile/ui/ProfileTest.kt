@@ -34,7 +34,7 @@ class ProfileTest {
     }
 
     @Test
-    fun profile() {
+    fun shouldRenderProfileScreenAsExpected() {
         every {
             profileViewModel.emailAddress
         } returns "abc@gmail.com"

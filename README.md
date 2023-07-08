@@ -29,3 +29,6 @@ MockWebServer
 These frameworks are often used for integration testing, which involves testing the interaction between different components or modules of an application. They can be used to test the integration of various parts of an Android app, such as testing network interactions or verifying the behavior of components working together.
 
 It's important to note that some frameworks, such as Robolectric, can be used for both unit testing and integration testing, depending on how they are configured and used in your tests. Additionally, the categorization of frameworks can vary based on individual usage and project requirements.
+
+Todo:
+Screenshot test
