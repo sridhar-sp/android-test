@@ -6,9 +6,12 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
+import com.gandiva.android.sample.login.usecase.LoginUseCaseImpl
 import com.google.common.truth.Truth
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import io.mockk.coEvery
+import io.mockk.mockk
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -29,13 +32,17 @@ class LoginKtTest {
     @Test
     fun shouldCallOnSuccessCallbackWithEmailOnSuccessfulLogin() {
 
+        val loginViewModel = LoginViewModel(mockk(relaxed = true))
+
+
         var emailFromOnSuccessCallback: String? = null
         val onSuccessMock: (String) -> Unit = { email ->
             emailFromOnSuccessCallback = email
         }
 
+
         with(composeRule) {
-            setContent { Login(onSuccess = onSuccessMock) }
+            setContent { Login(onSuccess = onSuccessMock, viewModel = loginViewModel) }
             onNodeWithTag("emailInput").performTextInput("abcd@gmail.com")
             onNodeWithTag("passwordInput").performTextInput("12345")
             onNodeWithTag("loginButton").performClick()
@@ -46,8 +53,14 @@ class LoginKtTest {
 
     @Test
     fun shouldEnableButtonOnlyWhenInputsAreValid() {
+
+        val loginUseCase = mockk<LoginUseCaseImpl>(relaxed = true)
+        val loginViewModel = LoginViewModel(loginUseCase)
+
+        coEvery { loginUseCase.login(any(), any()) } returns Unit
+
         with(composeRule) {
-            setContent { Login(onSuccess = {}) }
+            setContent { Login(onSuccess = {}, viewModel = loginViewModel) }
             onNodeWithTag("loginButton").assertIsNotEnabled()
 
             onNodeWithTag("emailInput").performTextInput("abcd")

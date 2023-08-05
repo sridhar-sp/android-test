@@ -6,10 +6,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
@@ -24,7 +26,6 @@ import com.gandiva.android.sample.R
 import com.gandiva.android.sample.common.ui.PrimaryButton
 import com.gandiva.android.sample.common.ui.SingleLineTextInput
 import com.gandiva.android.sample.theme.appDimens
-import timber.log.Timber
 
 
 @OptIn(ExperimentalComposeUiApi::class)
@@ -32,7 +33,6 @@ import timber.log.Timber
 fun Login(onSuccess: (email: String) -> Unit, viewModel: LoginViewModel = hiltViewModel()) {
 
     LaunchedEffect(key1 = viewModel.loginState, block = {
-        Timber.d("LaunchedEffect  viewModel.loginState ${viewModel.loginState}")
         if (viewModel.loginState == LoginState.LoginSuccess) onSuccess(viewModel.email)
     })
 
@@ -53,39 +53,51 @@ fun Login(onSuccess: (email: String) -> Unit, viewModel: LoginViewModel = hiltVi
             .fillMaxWidth()
             .padding(bottom = MaterialTheme.appDimens.largeContentPadding),
             value = viewModel.email,
+            isEnabled = viewModel.loginState !== LoginState.InProgress,
             onValueChange = viewModel::updateEmail)
         PasswordInput(modifier = Modifier
             .semantics { testTagsAsResourceId = true;testTag = "passwordInput" }
             .fillMaxWidth()
             .padding(bottom = MaterialTheme.appDimens.mediumContentPadding),
             value = viewModel.password,
+            isEnabled = viewModel.loginState !== LoginState.InProgress,
             onValueChange = viewModel::updatePassword)
-        PrimaryButton(modifier = Modifier
-            .semantics { testTagsAsResourceId = true;testTag = "loginButton" }
-            .fillMaxWidth(),
-            text = stringResource(id = R.string.login),
-            enabled = viewModel.isLoginButtonEnabled,
-            onClick = viewModel::login)
+        if (viewModel.loginState === LoginState.LoginPending)
+            PrimaryButton(modifier = Modifier
+                .semantics { testTagsAsResourceId = true;testTag = "loginButton" }
+                .fillMaxWidth(),
+                text = stringResource(id = R.string.login),
+                enabled = viewModel.isLoginButtonEnabled,
+                onClick = viewModel::login)
+        if (viewModel.loginState === LoginState.InProgress)
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .semantics { testTagsAsResourceId = true;testTag = "progressLoader" }
+                    .align(Alignment.CenterHorizontally)
+                    .padding(MaterialTheme.appDimens.smallContentPadding)
+            )
     }
 }
 
 @Composable
-fun EmailInput(modifier: Modifier, value: String, onValueChange: (String) -> Unit) {
+fun EmailInput(modifier: Modifier, value: String, isEnabled: Boolean = true, onValueChange: (String) -> Unit) {
     SingleLineTextInput(
         modifier = modifier,
         value = value,
         hint = stringResource(id = R.string.email),
+        isEnabled = isEnabled,
         onValueChange = onValueChange,
         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Email)
     )
 }
 
 @Composable
-fun PasswordInput(modifier: Modifier, value: String, onValueChange: (String) -> Unit) {
+fun PasswordInput(modifier: Modifier, value: String, isEnabled: Boolean = true, onValueChange: (String) -> Unit) {
     SingleLineTextInput(
         modifier = modifier,
         value = value,
         hint = stringResource(id = R.string.password),
+        isEnabled = isEnabled,
         onValueChange = onValueChange,
         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Password),
         visualTransformation = PasswordVisualTransformation()

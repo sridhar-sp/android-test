@@ -11,5 +11,4 @@ class ProfileViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     val emailAddress = savedStateHandle.get<String>(BundleArgs.KEY_EMAIL)
-
 }

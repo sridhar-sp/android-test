@@ -104,6 +104,9 @@ dependencies {
     testImplementation(libs.mockk)
     // Assertion library
     testImplementation(libs.truth)
+    // Dependency injection for For instrumented tests
+    testImplementation(libs.dagger.hilt.android.testing)
+    kaptTest(libs.dagger.hilt.compiler)
 
     // To perform UI automation test.
     androidTestImplementation(libs.androidx.test.uiautomator)

@@ -5,11 +5,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.gandiva.android.sample.login.usecase.LoginUseCaseImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class LoginViewModel @Inject constructor() : ViewModel() {
+class LoginViewModel @Inject constructor(
+    private val loginUseCase: LoginUseCaseImpl
+) : ViewModel() {
 
     var email by mutableStateOf("")
         private set
@@ -20,7 +25,7 @@ class LoginViewModel @Inject constructor() : ViewModel() {
     var isLoginButtonEnabled by mutableStateOf(false)
         private set
 
-    var loginState by mutableStateOf<LoginState>(LoginState.InProgress)
+    var loginState by mutableStateOf<LoginState>(LoginState.LoginPending)
         private set
 
     fun updateEmail(emailInput: String) {
@@ -40,8 +45,13 @@ class LoginViewModel @Inject constructor() : ViewModel() {
         isLoginButtonEnabled = isEmailValid && isPasswordValid
     }
 
+
     fun login() {
-        loginState = LoginState.LoginSuccess
+        viewModelScope.launch {
+            loginState = LoginState.InProgress
+            loginUseCase.login(email, password)
+            loginState = LoginState.LoginSuccess
+        }
     }
 
 }

@@ -74,10 +74,12 @@ class LoginJourneyTest {
         device.enterTextOnFieldWithId("emailInput", "hello@gmail.com")
         device.enterTextOnFieldWithId("passwordInput", "123456")
 
-        device.wait(Until.hasObject(By.res("loginButton").enabled(true)), 1500)
+        device.wait(Until.hasObject(By.res("loginButton").enabled(true)), 1500L)
         assertThat(device.findObject(By.res("loginButton")).isEnabled).isEqualTo(true)
 
         device.clickFieldWithId("loginButton")
+
+        device.wait(Until.hasObject(By.res("hasObject")), 3000L)
 
         assertThat(device.textFromFieldWithId("welcomeMessageText"))
             .isEqualTo("Email as explicit argument hello@gmail.com")
