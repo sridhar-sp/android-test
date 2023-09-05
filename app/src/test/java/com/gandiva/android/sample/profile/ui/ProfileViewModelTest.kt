@@ -1,4 +1,4 @@
-package com.gandiva.android.sample.profile
+package com.gandiva.android.sample.profile.ui
 
 import androidx.lifecycle.SavedStateHandle
 import com.gandiva.android.sample.profile.constants.BundleArgs

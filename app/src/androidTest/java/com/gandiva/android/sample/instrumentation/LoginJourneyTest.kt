@@ -22,7 +22,7 @@ private const val BASIC_SAMPLE_PACKAGE = "com.gandiva.android.sample"
 private const val LAUNCH_TIMEOUT = 5000L
 
 @HiltAndroidTest
-@RunWith(AndroidJUnit4::class)
+//@RunWith(AndroidJUnit4::class)
 class LoginJourneyTest {
 
     private lateinit var device: UiDevice
@@ -32,7 +32,7 @@ class LoginJourneyTest {
 
     @Before
     fun init() {
-        hiltAndroidRule.inject()
+//        hiltAndroidRule.inject()
     }
 
     @Before

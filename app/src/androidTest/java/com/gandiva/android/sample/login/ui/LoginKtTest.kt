@@ -16,14 +16,14 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-@HiltAndroidTest
+//@HiltAndroidTest
 class LoginKtTest {
 
     @get:Rule
     val composeRule = createComposeRule()
 
-    @get:Rule
-    val hiltAndroidRule = HiltAndroidRule(this)
+//    @get:Rule
+//    val hiltAndroidRule = HiltAndroidRule(this)
 
     @Before
     fun init() {
@@ -33,7 +33,6 @@ class LoginKtTest {
     fun shouldCallOnSuccessCallbackWithEmailOnSuccessfulLogin() {
 
         val loginViewModel = LoginViewModel(mockk(relaxed = true))
-
 
         var emailFromOnSuccessCallback: String? = null
         val onSuccessMock: (String) -> Unit = { email ->

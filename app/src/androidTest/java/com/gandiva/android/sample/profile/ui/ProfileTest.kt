@@ -14,18 +14,18 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-@HiltAndroidTest
-@RunWith(AndroidJUnit4::class)
+//@HiltAndroidTest
+//@RunWith(AndroidJUnit4::class)
 class ProfileTest {
 
     @get:Rule
     val composeTestRule = createComposeRule()
 
-    @get:Rule
-    val hiltAndroidRule = HiltAndroidRule(this)
+//    @get:Rule
+//    val hiltAndroidRule = HiltAndroidRule(this)
 
     @JvmField
-    @BindValue
+//    @BindValue
     val profileViewModel: ProfileViewModel = mockk()
 
     @Before
@@ -46,5 +46,7 @@ class ProfileTest {
         composeTestRule.onNodeWithTag("welcomeMessageText").assertTextEquals("Email as explicit argument abc@gmail.com")
         composeTestRule.onNodeWithTag("welcomeMessageText2")
             .assertTextEquals("Email from saved state handle abc@gmail.com")
+
+        composeTestRule.waitForIdle()
     }
 }

@@ -70,6 +70,7 @@ Integration testing usually refers testing interaction between different compone
 * Screenshot test
 * Small brief on junit rules, test apk
 * Mock vs Stub
+* Difference between AndroidJunitRunner and RoboelectricTestRunner
 
 Points
 - Unit test ---  one element of the software at a time 
@@ -80,4 +81,9 @@ Keywords
 - DD-style way of writing tests 
 - Talking about different test classifications is always difficult.
 - 
+
+Commands
+./gradlew connectedAndroidTest --continue
+./gradlew testDebugUnitTest   
+
 
