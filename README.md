@@ -70,7 +70,11 @@ Integration testing usually refers testing interaction between different compone
 * Screenshot test
 * Small brief on junit rules, test apk
 * Mock vs Stub
-* Difference between AndroidJunitRunner and RoboelectricTestRunner
+* Difference between AndroidJunitRunner and RobolectricTestRunner
+* Example to Replace a binding in a single test
+* Different types smoke testing 
+  * Smoke
+  * Regression (a return to a previous and less advanced or worse state, condition, or way of behaving)
 
 Points
 - Unit test ---  one element of the software at a time 
