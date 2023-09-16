@@ -6,10 +6,11 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
+import com.gandiva.android.sample.domain.model.Email
 import com.gandiva.android.sample.domain.usecase.LoginUseCaseImpl
-import com.gandiva.android.sample.rules.MainCoroutineRule
 import com.gandiva.android.sample.presentation.ui.login.Login
 import com.gandiva.android.sample.presentation.ui.login.LoginViewModel
+import com.gandiva.android.sample.rules.MainCoroutineRule
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -72,7 +73,7 @@ class LoginKtTest {
 
         val loginViewModel = LoginViewModel(loginUseCase)
 
-        val onSuccessMock: (String) -> Unit = mockk()
+        val onSuccessMock: (Email) -> Unit = mockk()
         every { onSuccessMock.invoke(any()) } returns Unit
 
         with(composeRule) {
@@ -83,7 +84,7 @@ class LoginKtTest {
 
             advanceUntilIdle()
             waitForIdle()
-            verify { onSuccessMock("abcd@gmail.com") }
+            verify { onSuccessMock(Email("abcd@gmail.com")) }
         }
     }
 }

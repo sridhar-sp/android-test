@@ -23,6 +23,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.gandiva.android.sample.R
+import com.gandiva.android.sample.domain.model.Email
 import com.gandiva.android.sample.presentation.ui.common.PrimaryButton
 import com.gandiva.android.sample.presentation.ui.common.SingleLineTextInput
 import com.gandiva.android.sample.presentation.ui.theme.appDimens
@@ -30,7 +31,7 @@ import com.gandiva.android.sample.presentation.ui.theme.appDimens
 
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
-fun Login(onSuccess: (email: String) -> Unit, viewModel: LoginViewModel = hiltViewModel()) {
+fun Login(onSuccess: (email: Email) -> Unit, viewModel: LoginViewModel = hiltViewModel()) {
 
     LaunchedEffect(key1 = viewModel.loginState, block = {
         if (viewModel.loginState == LoginState.LoginSuccess) onSuccess(viewModel.email)
@@ -52,14 +53,14 @@ fun Login(onSuccess: (email: String) -> Unit, viewModel: LoginViewModel = hiltVi
             .testTag("emailInput")
             .fillMaxWidth()
             .padding(bottom = MaterialTheme.appDimens.largeContentPadding),
-            value = viewModel.email,
+            value = viewModel.email.value ?: "",
             isEnabled = viewModel.loginState !== LoginState.InProgress,
             onValueChange = viewModel::updateEmail)
         PasswordInput(modifier = Modifier
             .semantics { testTagsAsResourceId = true;testTag = "passwordInput" }
             .fillMaxWidth()
             .padding(bottom = MaterialTheme.appDimens.mediumContentPadding),
-            value = viewModel.password,
+            value = viewModel.password.value ?: "",
             isEnabled = viewModel.loginState !== LoginState.InProgress,
             onValueChange = viewModel::updatePassword)
         if (viewModel.loginState === LoginState.LoginPending)

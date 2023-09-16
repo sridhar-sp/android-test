@@ -16,9 +16,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.gandiva.android.sample.presentation.navigation.NavEvents
 import com.gandiva.android.sample.presentation.navigation.Screen
 import com.gandiva.android.sample.presentation.ui.login.Login
-import com.gandiva.android.sample.presentation.navigation.NavEvents
 import com.gandiva.android.sample.presentation.ui.profile.Profile
 import com.gandiva.android.sample.presentation.ui.theme.AppTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -32,7 +32,7 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
         viewModel.navEvents?.let {
             when (it) {
                 is NavEvents.NavigateToLogin ->
-                    navController.navigate("${Screen.Profile.route}/${it.email}") {
+                    navController.navigate("${Screen.Profile.route}/${it.email.value}") {
                         popUpTo(Screen.Login.route) {
                             inclusive = true
                         }

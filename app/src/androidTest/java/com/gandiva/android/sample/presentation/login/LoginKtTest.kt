@@ -6,6 +6,7 @@ import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
+import com.gandiva.android.sample.domain.model.Email
 import com.gandiva.android.sample.domain.usecase.LoginUseCaseImpl
 import com.gandiva.android.sample.presentation.ui.login.Login
 import com.gandiva.android.sample.presentation.ui.login.LoginViewModel
@@ -34,8 +35,8 @@ class LoginKtTest {
 
         val loginViewModel = LoginViewModel(mockk(relaxed = true))
 
-        var emailFromOnSuccessCallback: String? = null
-        val onSuccessMock: (String) -> Unit = { email ->
+        var emailFromOnSuccessCallback: Email? = null
+        val onSuccessMock: (Email) -> Unit = { email ->
             emailFromOnSuccessCallback = email
         }
 
@@ -46,7 +47,7 @@ class LoginKtTest {
             onNodeWithTag("passwordInput").performTextInput("12345")
             onNodeWithTag("loginButton").performClick()
             waitForIdle()
-            Truth.assertThat(emailFromOnSuccessCallback).isEqualTo("abcd@gmail.com")
+            Truth.assertThat(emailFromOnSuccessCallback!!.value).isEqualTo("abcd@gmail.com")
         }
     }
 
