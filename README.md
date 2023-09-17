@@ -8,7 +8,8 @@ Following are the different types of testing involved in android.
 * Integration testing
 * Performance testing
 
-----
+<hr/>
+
 ## Place of execution
 
 
@@ -17,6 +18,8 @@ Following are the different types of testing involved in android.
 | Unit testing        | JVM                   |
 | UI testing          | JVM or Android device |
 | Integration testing | Android device        |
+
+<hr/>
 
 ## Unit testing
 Unit testing usually refers testing a particular units of code totally in isolation with other component to ensure their correctness and functionality.
@@ -31,6 +34,71 @@ To bring the isolation we need to seek help on framework like `Mockito` to creat
 | Truth         | To perform assertions in tests                   |
 
 
+#### Example
+
+<details>
+<summary>Simple test without mocks</summary>
+
+#### System under test
+```kotlin
+data class Email(val value: String?) : Parcelable {
+    fun isValid(): Boolean {
+        return if (value == null) false else PatternsCompat.EMAIL_ADDRESS.matcher(value).matches()
+    }
+}
+```
+#### Test
+```kotlin
+class EmailTest {
+
+    @Test
+    fun shouldReturnIsValidAsFalseWhenEmailIsNull() {
+        Truth.assertThat(Email(null).isValid()).isFalse()
+    }
+
+    @Test
+    fun shouldReturnIsValidAsFalseWhenEmailIsInvalid() {
+        Truth.assertThat(Email("aa@.com").isValid()).isFalse()
+        Truth.assertThat(Email("aacd@aa.com@").isValid()).isFalse()
+        Truth.assertThat(Email("").isValid()).isFalse()
+        Truth.assertThat(Email("@gmail.com").isValid()).isFalse()
+    }
+
+    @Test
+    fun shouldReturnIsValidAsTrueWhenEmailIsValid() {
+        Truth.assertThat(Email("abcd@domain.com").isValid()).isTrue()
+        Truth.assertThat(Email("a@domain.in").isValid()).isTrue()
+    }
+}
+```
+</details>
+
+<details>
+<summary>Simple test with mocks</summary>
+
+#### System under test
+```kotlin
+class ProfileViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
+) : ViewModel() {
+    val emailAddress = savedStateHandle.get<String>(BundleArgs.KEY_EMAIL)
+}
+```
+#### Test
+```kotlin
+	@Test
+    fun `should return email value from saved state handle when email address is read from viewModel`() {
+        val savedStateHandleMock = mockk<SavedStateHandle>()
+        every<String?> { savedStateHandleMock[BundleArgs.KEY_EMAIL] } returns "abcd@gmail.com"
+        val profileViewModel = ProfileViewModel(savedStateHandleMock)
+        assertThat(profileViewModel.emailAddress).isEqualTo("abcd@gmail.com")
+    }
+```
+
+</details>
+
+<hr/>
+
 ## UI testing
 UI testing usually refers testing the user interface by simulating user action and verify the behavior of UI elements.
 
@@ -43,6 +111,7 @@ UI testing usually refers testing the user interface by simulating user action a
 | Compose UI test Junit | To provide Junit rules invoke composable function in Junit. also provides APIs to perform UI interaction and state assertion. |
 | Appium				            | *Yet to add *	                                                                                                                |
 
+<hr/>
 
 ## Integration testing
 Integration testing usually refers testing interaction between different components or modules of an application.
@@ -53,6 +122,7 @@ Integration testing usually refers testing interaction between different compone
 | Robolectric			       | 	 To perform android UI/functional testing on JVM without the need for android device                                                                                                                        |
 | AndroidX test runner | Provides AndroidJUnitRunner which is a JUnit test runner that allows to run instrumented JUnit 4 tests on Android devices, including those using the Espresso, UI Automator, and Compose testing frameworks. |
 
+<hr/>
 
 #### Reference
 
@@ -65,7 +135,7 @@ Integration testing usually refers testing interaction between different compone
 * https://martinfowler.com/bliki/TestDouble.html
 * 
 
-
+<hr/>
 #### Todo
 * Screenshot test
 * Small brief on junit rules, test apk
@@ -84,8 +154,8 @@ Keywords
 - SUT
 - DD-style way of writing tests 
 - Talking about different test classifications is always difficult.
-- 
 
+<hr/>
 Commands
 ./gradlew connectedAndroidTest --continue
 ./gradlew testDebugUnitTest   
