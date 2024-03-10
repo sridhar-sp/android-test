@@ -1,4 +1,5 @@
 # Android testing
+
 A collection of samples to showcase various testing types that can be performed on the Android code base.
 
 Following are the different types of testing involved in android.
@@ -12,7 +13,6 @@ Following are the different types of testing involved in android.
 
 ## Place of execution
 
-
 | Test 				           | Execution             |
 |---------------------|-----------------------|
 | Unit testing        | JVM                   |
@@ -22,7 +22,9 @@ Following are the different types of testing involved in android.
 <hr/>
 
 ## Unit testing
-Unit testing usually refers testing a particular units of code totally in isolation with other component to ensure their correctness and functionality.
+
+Unit testing usually refers testing a particular units of code totally in isolation with other component to ensure their
+correctness and functionality.
 To bring the isolation we need to seek help on framework like `Mockito` to create stubs, mock, and test doubles.
 
 #### Famous Unit testing frameworks
@@ -33,13 +35,13 @@ To bring the isolation we need to seek help on framework like `Mockito` to creat
 | Mockito       | Mocking framework for unit tests written in Java |
 | Truth         | To perform assertions in tests                   |
 
-
 #### Example
 
 <details>
 <summary>Simple test without mocks</summary>
 
 #### System under test
+
 ```kotlin
 data class Email(val value: String?) : Parcelable {
     fun isValid(): Boolean {
@@ -47,7 +49,9 @@ data class Email(val value: String?) : Parcelable {
     }
 }
 ```
+
 #### Test
+
 ```kotlin
 class EmailTest {
 
@@ -71,12 +75,14 @@ class EmailTest {
     }
 }
 ```
+
 </details>
 
 <details>
 <summary>Simple test with mocks</summary>
 
 #### System under test
+
 ```kotlin
 class ProfileViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
@@ -84,15 +90,17 @@ class ProfileViewModel @Inject constructor(
     val emailAddress = savedStateHandle.get<String>(BundleArgs.KEY_EMAIL)
 }
 ```
+
 #### Test
+
 ```kotlin
-	@Test
-    fun `should return email value from saved state handle when email address is read from viewModel`() {
-        val savedStateHandleMock = mockk<SavedStateHandle>()
-        every<String?> { savedStateHandleMock[BundleArgs.KEY_EMAIL] } returns "abcd@gmail.com"
-        val profileViewModel = ProfileViewModel(savedStateHandleMock)
-        assertThat(profileViewModel.emailAddress).isEqualTo("abcd@gmail.com")
-    }
+    @Test
+fun `should return email value from saved state handle when email address is read from viewModel`() {
+    val savedStateHandleMock = mockk<SavedStateHandle>()
+    every<String?> { savedStateHandleMock[BundleArgs.KEY_EMAIL] } returns "abcd@gmail.com"
+    val profileViewModel = ProfileViewModel(savedStateHandleMock)
+    assertThat(profileViewModel.emailAddress).isEqualTo("abcd@gmail.com")
+}
 ```
 
 </details>
@@ -100,6 +108,7 @@ class ProfileViewModel @Inject constructor(
 <hr/>
 
 ## UI testing
+
 UI testing usually refers testing the user interface by simulating user action and verify the behavior of UI elements.
 
 #### Famous UI testing frameworks
@@ -114,14 +123,27 @@ UI testing usually refers testing the user interface by simulating user action a
 <hr/>
 
 ## Integration testing
+
 Integration testing usually refers testing interaction between different components or modules of an application.
 
 #### Integration Testing Frameworks
-| Framework 			        | Description                                                                                                                                                                                                  |
-|----------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Robolectric			       | 	 To perform android UI/functional testing on JVM without the need for android device                                                                                                                        |
-| AndroidX test runner | Provides AndroidJUnitRunner which is a JUnit test runner that allows to run instrumented JUnit 4 tests on Android devices, including those using the Espresso, UI Automator, and Compose testing frameworks. |
 
+| Framework 			        | Description                                                                                                                                                                                                                                                                |
+|----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Robolectric			       | 	 To perform android UI/functional testing on JVM without the need for android device.<br/> * Test files are located inside the test folder                                                                                                                                |
+| AndroidX test runner | Provides AndroidJUnitRunner which is a JUnit test runner that allows to run instrumented JUnit 4 tests on Android devices, including those using the Espresso, UI Automator, and Compose testing frameworks. <br/> * Test files are located inside the androidTest folder. |
+
+### Integration Testing Support
+
+#### Gradle Managed Devices
+
+Gradle Managed Devices offers a way to configure a virtual or real device in Gradle to run the integration test. Since
+the configuration is added to Gradle, it allows Gradle to be aware of the device lifecycle and can start or shut down
+the device as required.
+
+```
+./gradlew testDeviceDebugAndroidTest
+```
 <hr/>
 
 #### Reference
@@ -133,7 +155,7 @@ Integration testing usually refers testing interaction between different compone
 * https://developer.android.com/training/testing/other-components/ui-automator
 * https://martinfowler.com/articles/practical-test-pyramid.html#ProviderTestourTeam
 * https://martinfowler.com/bliki/TestDouble.html
-* 
+* https://developer.android.com/studio/test/gradle-managed-devices
 
 <hr/>
 #### Todo
@@ -147,12 +169,13 @@ Integration testing usually refers testing interaction between different compone
   * Regression (a return to a previous and less advanced or worse state, condition, or way of behaving)
 
 Points
-- Unit test ---  one element of the software at a time 
--  Test Double as the generic term for any kind of pretend object used in place of a real object for testing purposes.
-Keywords
+
+- Unit test --- one element of the software at a time
+- Test Double as the generic term for any kind of pretend object used in place of a real object for testing purposes.
+  Keywords
 - collaborators
 - SUT
-- DD-style way of writing tests 
+- DD-style way of writing tests
 - Talking about different test classifications is always difficult.
 
 <hr/>

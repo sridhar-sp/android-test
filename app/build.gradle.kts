@@ -1,3 +1,5 @@
+import com.android.build.api.dsl.ManagedVirtualDevice
+
 plugins {
     id("com.android.application")
     kotlin("android")
@@ -54,6 +56,17 @@ android {
         unitTests {
             isIncludeAndroidResources = true
         }
+        managedDevices {
+
+            devices {
+                create<ManagedVirtualDevice>("testDevice") {
+                    device = "Pixel 6"
+                    apiLevel = 34
+                    systemImageSource = "aosp"
+                }
+
+            }
+        }
     }
 }
 
@@ -95,8 +108,7 @@ dependencies {
     androidTestImplementation(libs.truth)
 
     // Regular JUnit dependency
-    testImplementation(libs.junit4)
-    /* Needed for createAndroidComposeRule and other rules used to perform UI test - here we use robolectric to run ui
+    testImplementation(libs.junit4)/* Needed for createAndroidComposeRule and other rules used to perform UI test - here we use robolectric to run ui
      test on jvm */
     testImplementation(libs.androidx.compose.ui.test.junit4)
     // Needed to run android UI test on JVM instead of on an emulator or device
