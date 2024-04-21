@@ -141,9 +141,29 @@ Gradle Managed Devices offers a way to configure a virtual or real device in Gra
 the configuration is added to Gradle, it allows Gradle to be aware of the device lifecycle and can start or shut down
 the device as required.
 
+#### Setup
+
+```kotlin
+testOptions {
+  managedDevices {
+    devices {
+      create<ManagedVirtualDevice>("testDevice") {
+        device = "Pixel 6"
+        apiLevel = 34
+        systemImageSource = "aosp"
+      }
+
+    }
+  }
+}
 ```
+
+#### Run
+
+```shell
 ./gradlew testDeviceDebugAndroidTest
 ```
+
 <hr/>
 
 #### Reference
