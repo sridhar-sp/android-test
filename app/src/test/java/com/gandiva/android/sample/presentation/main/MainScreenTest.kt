@@ -7,8 +7,9 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performTextInput
 import com.gandiva.android.sample.DummyTestActivity
-import com.gandiva.android.sample.rules.MainCoroutineRule
+import com.gandiva.android.sample.domain.usecase.LoginUseCase
 import com.gandiva.android.sample.presentation.ui.main.MainScreen
+import com.gandiva.android.sample.rules.MainCoroutineRule
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.test.advanceUntilIdle
@@ -19,13 +20,18 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.RobolectricTestRunner
 import org.robolectric.shadows.ShadowLog
+import javax.inject.Inject
 
-@HiltAndroidTest
+/**
+ * Example test to show, how a unit test should not be written.
+ * More details will add later
+ */
+@HiltAndroidTest // Provide HiltApplication class details inside robolectric.properties
 @RunWith(RobolectricTestRunner::class)
 class MainScreenTest {
 
     @get:Rule(order = 0)
-    val hiltAndroidRule = HiltAndroidRule(this)
+    val hiltAndroidRule = HiltAndroidRule(this) // Sine our component get dependency from hilt, we need this rule
 
     @get:Rule(order = 1)
     val androidComposeRule = createAndroidComposeRule<DummyTestActivity>()
@@ -33,13 +39,18 @@ class MainScreenTest {
     @get:Rule
     var mainCoroutineRule = MainCoroutineRule()
 
+    @Inject
+    lateinit var loginUseCase: LoginUseCase
+
     @Before
     fun init() {
         ShadowLog.stream = System.out
+//        hiltAndroidRule.inject() // Allow us to provide modified/mock/stub dependencies by using separate module
+//        println("***** login use case ${loginUseCase}")
     }
 
     @Test
-    fun shouldSuccessfullyLaunchProfileScreenWithEmailPostLogin() = runTest {
+    fun shouldSuccessfullyLaunchProfileScreenWithEmailPostLogin() = runTest {// When the logic under test uses coroutine
         with(androidComposeRule) {
             setContent { MainScreen() }
 
