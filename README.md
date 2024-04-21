@@ -178,7 +178,9 @@ testOptions {
 * https://developer.android.com/studio/test/gradle-managed-devices
 
 <hr/>
+
 #### Todo
+
 * Screenshot test
 * Small brief on junit rules, test apk
 * Mock vs Stub
