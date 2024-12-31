@@ -3,7 +3,6 @@ package com.gandiva.android.sample.domain.model
 import com.google.common.truth.Truth
 import org.junit.Test
 
-
 class PasswordTest {
 
     @Test

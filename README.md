@@ -182,6 +182,118 @@ UI testing usually refers testing the user interface by simulating user action a
 | Compose UI test Junit | To provide Junit rules invoke composable function in Junit. also provides APIs to perform UI interaction and state assertion. |
 | Appium				            | *Yet to add *	                                                                                                                |
 
+### Compose UI test Junit
+
+<details>
+<summary>Compose UI+Interaction Unit Test </summary>
+
+#### System under test
+
+Test uses `RobolectricTestRunner` to run code on `JVM`.
+Some code from `android.jar` requires special config to return use android resources and return default values (i.e.,
+Log methods).
+
+```
+testOptions {
+        unitTests {
+            // Enables unit tests to use Android resources, assets, and manifests.
+            isIncludeAndroidResources = true
+            // Whether unmocked methods from android.jar should throw exceptions or return default values (i.e. zero or null).
+            isReturnDefaultValues = true
+        }
+}
+```
+
+```kotlin
+@Composable
+fun Login(onSuccess: (email: Email) -> Unit, viewModel: LoginViewModel = hiltViewModel()) {
+
+  LaunchedEffect(key1 = viewModel.loginState, block = {
+    if (viewModel.loginState == LoginState.LoginSuccess) onSuccess(viewModel.email)
+  })
+
+  Column(
+    modifier = Modifier
+      .fillMaxSize()
+      .padding(MaterialTheme.appDimens.mediumContentPadding),
+    verticalArrangement = Arrangement.Center
+  ) {
+    Text(
+      modifier = Modifier.padding(bottom = MaterialTheme.appDimens.largeContentPadding),
+      text = stringResource(id = R.string.login),
+      style = MaterialTheme.typography.headlineMedium
+    )
+    EmailInput(modifier = Modifier
+      .semantics { testTagsAsResourceId = true;testTag = "emailInput" }
+      .testTag("emailInput")
+      .fillMaxWidth()
+      .padding(bottom = MaterialTheme.appDimens.largeContentPadding),
+      value = viewModel.email.value ?: "",
+      isEnabled = viewModel.loginState !== LoginState.InProgress,
+      onValueChange = viewModel::updateEmail)
+    PasswordInput(modifier = Modifier
+      .semantics { testTagsAsResourceId = true;testTag = "passwordInput" }
+      .fillMaxWidth()
+      .padding(bottom = MaterialTheme.appDimens.mediumContentPadding),
+      value = viewModel.password.value ?: "",
+      isEnabled = viewModel.loginState !== LoginState.InProgress,
+      onValueChange = viewModel::updatePassword)
+    if (viewModel.loginState === LoginState.LoginPending)
+      PrimaryButton(modifier = Modifier
+        .semantics { testTagsAsResourceId = true;testTag = "loginButton" }
+        .fillMaxWidth(),
+        text = stringResource(id = R.string.login),
+        enabled = viewModel.isLoginButtonEnabled,
+        onClick = viewModel::login)
+    if (viewModel.loginState === LoginState.InProgress)
+      CircularProgressIndicator(
+        modifier = Modifier
+          .semantics { testTagsAsResourceId = true;testTag = "progressLoader" }
+          .align(Alignment.CenterHorizontally)
+          .padding(MaterialTheme.appDimens.smallContentPadding)
+      )
+  }
+}
+```
+
+#### Test
+
+```kotlin
+@RunWith(RobolectricTestRunner::class)
+class LoginKtTest {
+
+  @get:Rule
+  val composeRule = createComposeRule()
+
+  @get:Rule
+  var mainCoroutineRule = MainCoroutineRule()
+
+  @Test
+  fun shouldEnableButtonOnlyWhenInputsAreValid() {
+    with(composeRule) {
+      val loginUseCase = mockk<LoginUseCaseImpl>()
+      val loginViewModel = LoginViewModel(loginUseCase)
+      setContent { Login(onSuccess = {}, viewModel = loginViewModel) }
+      onNodeWithTag("loginButton").assertIsNotEnabled()
+
+      onNodeWithTag("emailInput").performTextInput("abcd")
+      onNodeWithTag("loginButton").assertIsNotEnabled()
+
+      onNodeWithTag("emailInput").performTextInput("abcd@gmail.com")
+      onNodeWithTag("loginButton").assertIsNotEnabled()
+
+      onNodeWithTag("passwordInput").performTextInput("12")
+      onNodeWithTag("loginButton").assertIsNotEnabled()
+
+      onNodeWithTag("passwordInput").performTextInput("12345")
+      onNodeWithTag("loginButton").assertIsEnabled()
+    }
+  }
+}
+```
+
+</details>
+
 <hr/>
 
 ## Integration testing
@@ -194,6 +306,105 @@ Integration testing usually refers testing interaction between different compone
 |----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Robolectric			       | 	 To perform android UI/functional testing on JVM without the need for android device.<br/> * Test files are located inside the test folder                                                                                                                                |
 | AndroidX test runner | Provides AndroidJUnitRunner which is a JUnit test runner that allows to run instrumented JUnit 4 tests on Android devices, including those using the Espresso, UI Automator, and Compose testing frameworks. <br/> * Test files are located inside the androidTest folder. |
+
+#### Robolectric
+
+<details>
+<summary>Instrumentation test with Robolectric</summary>
+
+Test uses `AndroidJUnitRunner` to run on android virtual/physical device.
+
+#### System under test
+
+```kotlin
+@Composable
+fun Login(onSuccess: (email: Email) -> Unit, viewModel: LoginViewModel = hiltViewModel()) {
+
+  LaunchedEffect(key1 = viewModel.loginState, block = {
+    if (viewModel.loginState == LoginState.LoginSuccess) onSuccess(viewModel.email)
+  })
+
+  Column(
+    modifier = Modifier
+      .fillMaxSize()
+      .padding(MaterialTheme.appDimens.mediumContentPadding),
+    verticalArrangement = Arrangement.Center
+  ) {
+    Text(
+      modifier = Modifier.padding(bottom = MaterialTheme.appDimens.largeContentPadding),
+      text = stringResource(id = R.string.login),
+      style = MaterialTheme.typography.headlineMedium
+    )
+    EmailInput(modifier = Modifier
+      .semantics { testTagsAsResourceId = true;testTag = "emailInput" }
+      .testTag("emailInput")
+      .fillMaxWidth()
+      .padding(bottom = MaterialTheme.appDimens.largeContentPadding),
+      value = viewModel.email.value ?: "",
+      isEnabled = viewModel.loginState !== LoginState.InProgress,
+      onValueChange = viewModel::updateEmail)
+    PasswordInput(modifier = Modifier
+      .semantics { testTagsAsResourceId = true;testTag = "passwordInput" }
+      .fillMaxWidth()
+      .padding(bottom = MaterialTheme.appDimens.mediumContentPadding),
+      value = viewModel.password.value ?: "",
+      isEnabled = viewModel.loginState !== LoginState.InProgress,
+      onValueChange = viewModel::updatePassword)
+    if (viewModel.loginState === LoginState.LoginPending)
+      PrimaryButton(modifier = Modifier
+        .semantics { testTagsAsResourceId = true;testTag = "loginButton" }
+        .fillMaxWidth(),
+        text = stringResource(id = R.string.login),
+        enabled = viewModel.isLoginButtonEnabled,
+        onClick = viewModel::login)
+    if (viewModel.loginState === LoginState.InProgress)
+      CircularProgressIndicator(
+        modifier = Modifier
+          .semantics { testTagsAsResourceId = true;testTag = "progressLoader" }
+          .align(Alignment.CenterHorizontally)
+          .padding(MaterialTheme.appDimens.smallContentPadding)
+      )
+  }
+}
+```
+
+#### Test
+
+```kotlin
+class LoginKtTest {
+
+  @get:Rule
+  val composeRule = createComposeRule()
+
+  @Test
+  fun shouldEnableButtonOnlyWhenInputsAreValid() {
+
+    val loginUseCase = mockk<LoginUseCaseImpl>(relaxed = true)
+    val loginViewModel = LoginViewModel(loginUseCase)
+
+    coEvery { loginUseCase.login(any(), any()) } returns Unit
+
+    with(composeRule) {
+      setContent { Login(onSuccess = {}, viewModel = loginViewModel) }
+      onNodeWithTag("loginButton").assertIsNotEnabled()
+
+      onNodeWithTag("emailInput").performTextInput("abcd")
+      onNodeWithTag("loginButton").assertIsNotEnabled()
+
+      onNodeWithTag("emailInput").performTextInput("abcd@gmail.com")
+      onNodeWithTag("loginButton").assertIsNotEnabled()
+
+      onNodeWithTag("passwordInput").performTextInput("12")
+      onNodeWithTag("loginButton").assertIsNotEnabled()
+
+      onNodeWithTag("passwordInput").performTextInput("12345")
+      onNodeWithTag("loginButton").assertIsEnabled()
+    }
+  }
+}
+```
+
+</details>
 
 ### Integration Testing Support
 
@@ -264,7 +475,10 @@ Points
 
 <hr/>
 Commands
-./gradlew connectedAndroidTest --continue
-./gradlew testDebugUnitTest   
+
+`./gradlew connectedAndroidTest --continue`
+
+`./gradlew testDebugUnitTest`
+
 
 

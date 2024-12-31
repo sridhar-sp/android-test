@@ -50,7 +50,7 @@ class MainScreenTest {
     }
 
     @Test
-    fun shouldSuccessfullyLaunchProfileScreenWithEmailPostLogin() = runTest {// When the logic under test uses coroutine
+    fun shouldSuccessfullyLaunchProfileScreenWithEmailPostLogin() = runTest { // When the logic under test uses coroutine
         with(androidComposeRule) {
             setContent { MainScreen() }
 
