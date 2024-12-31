@@ -2,9 +2,11 @@ package com.gandiva.android.sample.domain.usecase
 
 import com.gandiva.android.sample.domain.model.Email
 import com.gandiva.android.sample.domain.model.Password
-import kotlinx.coroutines.Dispatchers
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 interface LoginUseCase {
@@ -27,4 +29,12 @@ class LoginUseCaseImpl @Inject constructor() : LoginUseCase {
         println("***** Return from login method Took ${System.currentTimeMillis() - startTime} mill seconds")
         // Assume login done
     }
+}
+
+@Module
+@InstallIn(ViewModelComponent::class)
+interface LoginModule {
+
+    @Binds
+    fun bindLoginUseCase(loginUseCaseImpl: LoginUseCaseImpl): LoginUseCase
 }

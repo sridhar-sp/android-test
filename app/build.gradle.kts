@@ -32,11 +32,11 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
     kotlin {
-        jvmToolchain(11)
+        jvmToolchain(17)
     }
     buildFeatures {
         compose = true
@@ -104,6 +104,7 @@ dependencies {
     // Allows us to create and configure mock objects, stub methods, verify method invocations, and more
     androidTestImplementation(libs.mockk.agent)
     androidTestImplementation(libs.mockk.android)
+    androidTestImplementation(libs.mockito.kotlin)
     // Assertion library
     androidTestImplementation(libs.truth)
 
@@ -115,6 +116,9 @@ dependencies {
     testImplementation(libs.robolectric)
     // Allows us to create and configure mock objects, stub methods, verify method invocations, and more
     testImplementation(libs.mockk)
+    // For testing coroutines
+    testImplementation(libs.androidx.core.testing)
+
     // Assertion library
     testImplementation(libs.truth)
     // Dependency injection for For instrumented tests

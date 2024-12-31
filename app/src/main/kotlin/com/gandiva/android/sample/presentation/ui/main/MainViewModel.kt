@@ -18,4 +18,8 @@ class MainViewModel @Inject constructor() : ViewModel() {
     fun onLoginSuccess(email: Email) {
         navEvents = NavEvents.NavigateToLogin(email)
     }
+
+    fun onLogout() {
+        navEvents = NavEvents.NavigateToHome
+    }
 }

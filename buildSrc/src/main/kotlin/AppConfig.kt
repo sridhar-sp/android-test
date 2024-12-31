@@ -7,7 +7,7 @@ object AppConfig {
     const val versionCode = 1
     const val versionName = "1.0.0"
 
-    const val composeVersion = "1.4.3"
+    const val composeVersion = "1.5.10"
 
     const val androidTestInstrumentation = "com.gandiva.android.sample.AndroidHiltTestRunner"
     const val proguardConsumerRules =  "consumer-rules.pro"

@@ -5,12 +5,14 @@ androidxActivityCompose = "1.3.1"
 androidxComposeBom = "2023.01.00"
 androidxComposeMaterial3 = "1.1.0-alpha06"
 androidxAppcompat = "1.6.0"
+coreTesting = "2.2.0"
 junit4 = "4.13.2"
 androidxComposeUiTooling = "1.4.0"
-daggerHilt = "2.44.2"
+daggerHilt = "2.49"
 daggerHiltAndroidTesting = "2.44"
 androidxHiltNavigationCompose = "1.0.0"
 androidxNavigationUiKtx = "2.5.3"
+mockitoKotlin = "5.4.0"
 timber = "5.0.1"
 mockkVersion = "1.13.5"
 truthVersion = "1.1.4"
@@ -20,6 +22,7 @@ androidxTestRunner = "1.5.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }
+androidx-core-testing = { module = "androidx.arch.core:core-testing", version.ref = "coreTesting" }
 androidx-lifecycle-runtimeKtx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "androidxLifecycle" }
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "androidxActivityCompose" }
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "androidxComposeBom" }
@@ -35,6 +38,7 @@ dagger-hilt = { group = "com.google.dagger", name = "hilt-android", version.ref 
 dagger-hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "daggerHilt" }
 dagger-hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "daggerHilt" }
 androidx-hilt-navigation-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "androidxHiltNavigationCompose" }
+mockito-kotlin = { module = "org.mockito.kotlin:mockito-kotlin", version.ref = "mockitoKotlin" }
 timber = { group = "com.jakewharton.timber", name = "timber", version.ref = "timber" }
 junit4 = { group = "junit", name = "junit", version.ref = "junit4" }
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockkVersion" }

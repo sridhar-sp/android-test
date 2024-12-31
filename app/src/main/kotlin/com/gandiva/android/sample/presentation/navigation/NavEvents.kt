@@ -4,4 +4,6 @@ import com.gandiva.android.sample.domain.model.Email
 
 sealed class NavEvents {
     data class NavigateToLogin(val email: Email) : NavEvents()
+
+    data object NavigateToHome : NavEvents()
 }

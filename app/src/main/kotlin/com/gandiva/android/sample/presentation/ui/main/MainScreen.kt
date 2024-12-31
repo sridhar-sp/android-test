@@ -37,6 +37,9 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
                             inclusive = true
                         }
                     }
+                is NavEvents.NavigateToHome -> {
+                    navController.navigate(Screen.Login.route)
+                }
             }
         }
     }
@@ -53,7 +56,10 @@ fun MainScreen(viewModel: MainViewModel = hiltViewModel()) {
                 defaultValue = ""
             }
         )) { backStackEntry ->
-            Profile(email = backStackEntry.arguments?.getString("email")!!)
+            Profile(
+                email = backStackEntry.arguments?.getString("email")!!,
+                onLogout = viewModel::onLogout
+            )
         }
 
     }
