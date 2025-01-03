@@ -23,11 +23,36 @@ Following are the different types of testing involved in android.
 
 ## Unit testing
 
-Unit testing usually refers testing a particular units of code totally in isolation with other component to ensure their
-correctness and functionality.
-To bring the isolation we need to seek help on framework like `Mockito` to create stubs (test doubles), mock.
+Unit testing usually refers to testing a particular unit of code in complete isolation from other components to ensure
+its correctness and functionality. Developers often use frameworks like `Mockito` to create stubs (test doubles), mocks,
+etc., to achieve this isolation.
 
-#### Famous Unit testing frameworks
+* **Stub**: A stub is a direct replacement for a function, interface, or abstract class (or any other dependency). It
+  allows
+  us to swap the original implementation with a test-specific version, often referred to as a test dummy (or test
+  double).
+
+
+* **Mock**: A mock serves as a more advanced test double for a dependency. Mocking frameworks let us actively simulate
+  different behaviours by configuring the mock to return specific responses based on inputs or conditions. Furthermore,
+  mocks allow us to confirm interactions by verifying the existence of a method, its number of calls, and the arguments
+  passed during each call.
+
+
+* **Why do we need this?** During testing, especially unit testing, we aim to isolate the component under test from its
+  dependencies. This ensures that we're testing the component alone, making the tests simpler, faster, and less
+  error-prone. Mocking or stubbing helps us avoid injecting side effects or relying on external dependencies.
+
+
+* **Example**: Imagine a ViewModel class that depends on a repository. The Repository class, in turn, makes network API
+  calls.
+  If we want to write a unit test for the ViewModel alone, we don’t want to incur the overhead of making actual API
+  calls,
+  as this can make the test error-prone due to network conditions or server response times. To avoid these side effects,
+  we can replace the repository with a stub (test double) or a mock during the test. This ensures that we focus only on
+  the behaviour of the ViewModel while bypassing external dependencies.
+
+### Famous Unit testing frameworks
 
 | Framework 			 | Description                                             |    
 |---------------|---------------------------------------------------------|
@@ -35,12 +60,12 @@ To bring the isolation we need to seek help on framework like `Mockito` to creat
 | Mockito       | Mocking framework for unit tests written in Java/Kotlin |
 | Truth         | To perform assertions in tests                          |
 
-#### Example
+### Example
 
 <details>
 <summary>Simple test without mocks</summary>
 
-#### System under test
+### System under test
 
 ```kotlin
 data class Email(val value: String?) : Parcelable {
@@ -50,7 +75,7 @@ data class Email(val value: String?) : Parcelable {
 }
 ```
 
-#### Test
+### Test
 
 ```kotlin
 class EmailTest {
@@ -81,7 +106,7 @@ class EmailTest {
 <details>
 <summary>Simple test with mocks</summary>
 
-#### System under test
+### System under test
 
 ```kotlin
 @HiltViewModel
@@ -93,7 +118,7 @@ class ProfileViewModel @Inject constructor(
 }
 ```
 
-#### Test
+### Test
 
 ```kotlin
 @Test
@@ -114,7 +139,7 @@ fun `should return email value from saved state handle when email address is rea
 <details>
 <summary>Test with mocks and stubs</summary>
 
-#### System under test
+### System under test
 
 ```kotlin
 @HiltViewModel
@@ -136,7 +161,7 @@ class ProfileViewModel @Inject constructor(
 }
 ```
 
-#### Test
+### Test
 
 ```kotlin
 @Test
@@ -167,13 +192,19 @@ fun `should call logout callback when logout button is pressed`() = runTest(test
 
 </details>
 
+### Command
+
+```shell
+./gradlew testDebugUnitTest
+```
+
 <hr/>
 
 ## UI testing
 
 UI testing usually refers testing the user interface by simulating user action and verify the behavior of UI elements.
 
-#### Famous UI testing frameworks
+### Famous UI testing frameworks
 
 | Framework 			         | Description                                                                                                                   |        
 |-----------------------|-------------------------------------------------------------------------------------------------------------------------------|
@@ -187,7 +218,7 @@ UI testing usually refers testing the user interface by simulating user action a
 <details>
 <summary>Compose UI+Interaction Unit Test </summary>
 
-#### System under test
+### System under test
 
 Test uses `RobolectricTestRunner` to run code on `JVM`.
 Some code from `android.jar` requires special config to return use android resources and return default values (i.e.,
@@ -256,7 +287,7 @@ fun Login(onSuccess: (email: Email) -> Unit, viewModel: LoginViewModel = hiltVie
 }
 ```
 
-#### Test
+### Test
 
 ```kotlin
 @RunWith(RobolectricTestRunner::class)
@@ -294,27 +325,34 @@ class LoginKtTest {
 
 </details>
 
+### Command
+
+```shell
+./gradlew testDebugUnitTest
+```
+
 <hr/>
+
 
 ## Integration testing
 
 Integration testing usually refers testing interaction between different components or modules of an application.
 
-#### Integration Testing Frameworks
+### Integration Testing Frameworks
 
 | Framework 			        | Description                                                                                                                                                                                                                                                                |
 |----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Robolectric			       | 	 To perform android UI/functional testing on JVM without the need for android device.<br/> * Test files are located inside the test folder                                                                                                                                |
 | AndroidX test runner | Provides AndroidJUnitRunner which is a JUnit test runner that allows to run instrumented JUnit 4 tests on Android devices, including those using the Espresso, UI Automator, and Compose testing frameworks. <br/> * Test files are located inside the androidTest folder. |
 
-#### Robolectric
+### Robolectric
 
 <details>
 <summary>Instrumentation test with Robolectric</summary>
 
 Test uses `AndroidJUnitRunner` to run on android virtual/physical device.
 
-#### System under test
+### System under test
 
 ```kotlin
 @Composable
@@ -368,7 +406,7 @@ fun Login(onSuccess: (email: Email) -> Unit, viewModel: LoginViewModel = hiltVie
 }
 ```
 
-#### Test
+### Test
 
 ```kotlin
 class LoginKtTest {
@@ -406,15 +444,21 @@ class LoginKtTest {
 
 </details>
 
+### Command
+
+```shell
+./gradlew connectedAndroidTest --continue
+```
+
 ### Integration Testing Support
 
-#### Gradle Managed Devices
+### Gradle Managed Devices
 
 Gradle Managed Devices offers a way to configure a virtual or real device in Gradle to run the integration test. Since
 the configuration is added to Gradle, it allows Gradle to be aware of the device lifecycle and can start or shut down
 the device as required.
 
-#### Setup
+### Setup
 
 ```kotlin
 testOptions {
@@ -431,15 +475,14 @@ testOptions {
 }
 ```
 
-#### Run
+### Command
 
 ```shell
 ./gradlew testDeviceDebugAndroidTest
 ```
-
 <hr/>
 
-#### Reference
+## Reference
 
 * https://developer.android.com/training/testing/instrumented-tests/ui-tests
 * https://developer.android.com/jetpack/compose/testing
@@ -472,13 +515,6 @@ Points
 - SUT
 - DD-style way of writing tests
 - Talking about different test classifications is always difficult.
-
-<hr/>
-Commands
-
-`./gradlew connectedAndroidTest --continue`
-
-`./gradlew testDebugUnitTest`
 
 
 
