@@ -18,6 +18,7 @@ import org.junit.Rule
 import org.junit.Test
 
 //@HiltAndroidTest
+// Make sure the testInstrumentationRunner is either as androidx.test.runner.AndroidJUnitRunner or class extends it in build.gradle
 class LoginKtTest {
 
     @get:Rule

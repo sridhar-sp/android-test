@@ -17,8 +17,8 @@ timber = "5.0.1"
 mockkVersion = "1.13.5"
 truthVersion = "1.1.4"
 roboelectricVersion = "4.10.3"
-uiautomatorVersion = "2.2.0"
-androidxTestRunner = "1.5.2"
+uiautomatorVersion = "2.3.0"
+androidxTestRunner = "1.6.2"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidxCore" }

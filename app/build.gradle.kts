@@ -91,7 +91,8 @@ dependencies {
 
     debugImplementation(libs.androidx.compose.ui.tooling)
 
-    // Required to add androidx.activity.ComponentActivity to test manifest
+    // Required to add androidx.activity.ComponentActivity to test manifest.
+    // Needed for createComposeRule(), but not for createAndroidComposeRule<YourActivity>())
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     // Used to create AndroidHiltTestRunner from AndroidJUnitRunner
     androidTestImplementation(libs.androidx.test.runner)
@@ -106,18 +107,22 @@ dependencies {
     androidTestImplementation(libs.mockk.agent)
     androidTestImplementation(libs.mockk.android)
     androidTestImplementation(libs.mockito.kotlin)
+
     // Assertion library
     androidTestImplementation(libs.truth)
 
+    // To perform UI automation test.
+    androidTestImplementation(libs.androidx.test.uiautomator)
+
     // Regular JUnit dependency
-    testImplementation(libs.junit4)/* Needed for createAndroidComposeRule and other rules used to perform UI test - here we use robolectric to run ui
-     test on jvm */
+    testImplementation(libs.junit4)
+    // Needed for createAndroidComposeRule and other rules used to perform UI test - here we use robolectric to run ui test on jvm
     testImplementation(libs.androidx.compose.ui.test.junit4)
     // Needed to run android UI test on JVM instead of on an emulator or device
     testImplementation(libs.robolectric)
     // Allows us to create and configure mock objects, stub methods, verify method invocations, and more
     testImplementation(libs.mockk)
-    // For testing coroutines
+    // Helper for other arch dependencies, including JUnit test rules that can be used with LiveData, coroutines etc
     testImplementation(libs.androidx.core.testing)
 
     // Assertion library
@@ -125,7 +130,4 @@ dependencies {
     // Dependency injection for For instrumented tests
     testImplementation(libs.dagger.hilt.android.testing)
     kaptTest(libs.dagger.hilt.compiler)
-
-    // To perform UI automation test.
-    androidTestImplementation(libs.androidx.test.uiautomator)
 }

@@ -5,7 +5,7 @@ import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 
 fun UiDevice.enterTextOnFieldWithId(resourceId: String, text: String) {
-    this.findObject(UiSelector().resourceId(resourceId)).text = text
+    this.findObject(UiSelector().resourceId(resourceId)).setText(text)
 }
 
 fun UiDevice.clickFieldWithId(resourceId: String) {

@@ -65,6 +65,19 @@ etc., to achieve this isolation.
 <details>
 <summary>Simple test without mocks</summary>
 
+```
+// Dependency
+
+// Regular JUnit dependency
+testImplementation("junit:junit:4.13.2")
+
+// Assertion library
+testImplementation("com.google.truth:truth:1.1.4")
+
+// Allows us to create and configure mock objects, stub methods, verify method invocations, and more
+testImplementation("io.mockk:mockk:1.13.5")
+```
+
 ### System under test
 
 ```kotlin
@@ -218,6 +231,35 @@ UI testing usually refers testing the user interface by simulating user action a
 <details>
 <summary>Compose UI+Interaction Unit Test </summary>
 
+```
+// Dependencies 
+
+// Allows us to create and configure mock objects, stub methods, verify method invocations, and more
+androidTestImplementation("io.mockk:mockk-agent:1.13.5")
+androidTestImplementation("io.mockk:mockk-android:1.13.5")
+androidTestImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
+
+// Assertion library
+androidTestImplementation("com.google.truth:truth:1.1.4")
+
+// Needed for createComposeRule , createAndroidComposeRule and other rules used to perform UI test
+testImplementation("androidx.compose.ui:ui-test-junit4:$compose_version") // used with robolectric to run ui test on jvm
+androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_version") // used with AndroidTestRunner to run ui test on virtual/physical device.
+
+// Needed for createComposeRule(), but not for createAndroidComposeRule<YourActivity>():
+debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_version")
+
+// Dependency injection for For instrumented tests on JVM
+testImplementation("com.google.dagger:hilt-android-testing:2.49")
+kaptTest("com.google.dagger:hilt-compiler:2.49")
+
+// Needed to run android UI test on JVM instead of on an emulator or device
+testImplementation("org.robolectric:robolectric:4.10.3)
+
+// Helper for other arch dependencies, including JUnit test rules that can be used with LiveData, coroutines etc
+testImplementation("androidx.arch.core:core-testing:2.2.0")
+```
+
 ### System under test
 
 Test uses `RobolectricTestRunner` to run code on `JVM`.
@@ -336,7 +378,15 @@ class LoginKtTest {
 
 ## Integration testing
 
-Integration testing usually refers testing interaction between different components or modules of an application.
+Integration testing typically involves testing the interactions between different components or modules of an
+application.
+
+During these tests, we can visually observe the app launching, with all the interactions specified in the code happening
+in real time.
+
+However, there’s an alternative approach that leverages GradleManagedDevices to run integration tests. This method skips
+the UI preview and executes the tests on a configured virtual or physical device. More details on this approach are
+provided in the next section.
 
 ### Integration Testing Frameworks
 
@@ -344,13 +394,61 @@ Integration testing usually refers testing interaction between different compone
 |----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Robolectric			       | 	 To perform android UI/functional testing on JVM without the need for android device.<br/> * Test files are located inside the test folder                                                                                                                                |
 | AndroidX test runner | Provides AndroidJUnitRunner which is a JUnit test runner that allows to run instrumented JUnit 4 tests on Android devices, including those using the Espresso, UI Automator, and Compose testing frameworks. <br/> * Test files are located inside the androidTest folder. |
+| UI Automator         |                                                                                                                                                                                                                                                                            |
+
+Test uses `AndroidJUnitRunner` to run on android virtual/physical device.
+
+```
+// Used to create AndroidHiltTestRunner from AndroidJUnitRunner
+androidTestImplementation("androidx.test:runner:1.6.2")
+```
+
+```kotlin
+android {
+
+  defaultConfig {
+    // testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+    // If we are using Hilt we can extend the AndroidJUnitRunner and pass the HiltTestApplication as application component.
+    testInstrumentationRunner = "com.gandiva.android.sample.AndroidHiltTestRunner"
+  }
+}
+```
+
+```kotlin
+class AndroidHiltTestRunner : AndroidJUnitRunner() {
+  override fun newApplication(cl: ClassLoader?, className: String?, context: Context?): Application {
+    return super.newApplication(cl, HiltTestApplication::class.java.name, context)
+  }
+}
+```
 
 ### Robolectric
 
 <details>
 <summary>Instrumentation test with Robolectric</summary>
 
-Test uses `AndroidJUnitRunner` to run on android virtual/physical device.
+You can observe from the test cases it look similar to the Compose UI Unit Test code snippet,
+because `androidx.compose.ui.test.junit4` library has the test implementation for both the JVM and Android. so using the
+same interfaces we can run the test on both runtime. Based on the test runner configured it will use the corresponding
+implementation at runtime.
+
+The `androidx.compose.ui.test.junit4` module includes a `ComposeTestRule` and an implementation for Android
+called `AndroidComposeTestRule`. Through this rule you can set Compose content or access the activity. You construct the
+rules using factory functions, either `createComposeRule` or, if you need access to an
+activity, `createAndroidComposeRule`.
+
+```
+// Dependencies 
+
+// Needed for createComposeRule , createAndroidComposeRule and other rules used to perform UI test
+testImplementation("androidx.compose.ui:ui-test-junit4:$compose_version") // used with robolectric to run ui test on jvm
+androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_version") // used with AndroidTestRunner to run ui test on virtual/physical device.
+
+// Required to add androidx.activity.ComponentActivity to test manifest.
+// Needed for createComposeRule(), but not for createAndroidComposeRule<YourActivity>():
+debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_version")
+```
 
 ### System under test
 
@@ -444,19 +542,70 @@ class LoginKtTest {
 
 </details>
 
+### Android JUnit test
+
+*** Write few lines about Android JUnit test ***
+
+```
+// To perform UI automation test.
+androidTestImplementation("androidx.test.uiautomator:uiautomator:2.3.0")
+```
+
+<details>
+<summary>Instrumentation test that runs on Virtual/Physical/GradleManagedDevice</summary>
+
+### System under test
+
+Explain about system under test
+
+### Test
+
+```kotlin
+
+```
+
+</details>
+
+### UI Automator
+
+*** Write few lines about UI Automator ***
+
+```
+// To perform UI automation test.
+androidTestImplementation("androidx.test.uiautomator:uiautomator:2.3.0")
+```
+
+<details>
+<summary>Instrumentation test with UI Automator</summary>
+
+### System under test
+
+Explain about system under test
+
+### Test
+
+```kotlin
+
+```
+</details>
+
 ### Command
 
 ```shell
 ./gradlew connectedAndroidTest --continue
 ```
 
-### Integration Testing Support
-
 ### Gradle Managed Devices
 
-Gradle Managed Devices offers a way to configure a virtual or real device in Gradle to run the integration test. Since
-the configuration is added to Gradle, it allows Gradle to be aware of the device lifecycle and can start or shut down
-the device as required.
+Gradle Managed Devices provide a way to configure virtual or physical devices directly in Gradle for running integration
+tests. Since the configuration is managed within Gradle, it gains full control over the device lifecycle, allowing it to
+start or shut down devices as needed.
+
+Unlike standard Android Virtual Devices (AVDs) or physical devices, there won’t be any visual preview during the test
+run. Once the test completes, you can review the results in the reports generated in the build folder.
+
+Gradle Managed Devices are primarily used for running automated tests at scale on various virtual devices, so the focus
+is on configuration details rather than a visual representation.
 
 ### Setup
 
@@ -469,7 +618,6 @@ testOptions {
         apiLevel = 34
         systemImageSource = "aosp"
       }
-
     }
   }
 }
@@ -492,6 +640,7 @@ testOptions {
 * https://martinfowler.com/articles/practical-test-pyramid.html#ProviderTestourTeam
 * https://martinfowler.com/bliki/TestDouble.html
 * https://developer.android.com/studio/test/gradle-managed-devices
+* https://developer.android.com/training/testing/other-components/ui-automator
 
 <hr/>
 
@@ -516,5 +665,52 @@ Points
 - DD-style way of writing tests
 - Talking about different test classifications is always difficult.
 
+```
+// Dependencies 
 
+// Allows us to create and configure mock objects, stub methods, verify method invocations, and more
+androidTestImplementation("io.mockk:mockk-agent:1.13.5")
+androidTestImplementation("io.mockk:mockk-android:1.13.5")
+androidTestImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
+
+// Assertion library
+androidTestImplementation("com.google.truth:truth:1.1.4")
+
+// Needed for createComposeRule , createAndroidComposeRule and other rules used to perform UI test
+testImplementation("androidx.compose.ui:ui-test-junit4:$compose_version") // used with robolectric to run ui test on jvm
+androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_version") // used with AndroidTestRunner to run ui test on virtual/physical device.
+
+// Required to add androidx.activity.ComponentActivity to test manifest.
+// Needed for createComposeRule(), but not for createAndroidComposeRule<YourActivity>():
+debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_version")
+
+// To perform UI automation test.
+androidTestImplementation("androidx.test.uiautomator:uiautomator:2.3.0")
+
+// Used to create AndroidHiltTestRunner from AndroidJUnitRunner
+androidTestImplementation("androidx.test:runner:1.6.2")
+
+// Dependency injection for For instrumented tests on Android
+androidTestImplementation("com.google.dagger:hilt-android-testing:2.49")
+kaptAndroidTest("com.google.dagger:hilt-compiler:2.49")
+
+// Dependency injection for For instrumented tests on JVM
+testImplementation("com.google.dagger:hilt-android-testing:2.49")
+kaptTest("com.google.dagger:hilt-compiler:2.49")
+
+// Needed to run android UI test on JVM instead of on an emulator or device
+testImplementation("org.robolectric:robolectric:4.10.3)
+
+// Helper for other arch dependencies, including JUnit test rules that can be used with LiveData, coroutines etc
+testImplementation("androidx.arch.core:core-testing:2.2.0")
+
+// Regular JUnit dependency
+testImplementation("junit:junit:4.13.2")
+
+// Assertion library
+testImplementation("com.google.truth:truth:1.1.4")
+
+// Allows us to create and configure mock objects, stub methods, verify method invocations, and more
+testImplementation("io.mockk:mockk:1.13.5")
+```
 
