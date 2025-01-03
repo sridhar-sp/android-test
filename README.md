@@ -396,34 +396,6 @@ provided in the next section.
 | AndroidX test runner | Provides AndroidJUnitRunner which is a JUnit test runner that allows to run instrumented JUnit 4 tests on Android devices, including those using the Espresso, UI Automator, and Compose testing frameworks. <br/> * Test files are located inside the androidTest folder. |
 | UI Automator         |                                                                                                                                                                                                                                                                            |
 
-Test uses `AndroidJUnitRunner` to run on android virtual/physical device.
-
-### Setup & Dependencies
-```
-// Used to create AndroidHiltTestRunner from AndroidJUnitRunner
-androidTestImplementation("androidx.test:runner:1.6.2")
-```
-
-```kotlin
-android {
-
-  defaultConfig {
-    // testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-
-    // If we are using Hilt we can extend the AndroidJUnitRunner and pass the HiltTestApplication as application component.
-    testInstrumentationRunner = "com.gandiva.android.sample.AndroidHiltTestRunner"
-  }
-}
-```
-
-```kotlin
-class AndroidHiltTestRunner : AndroidJUnitRunner() {
-  override fun newApplication(cl: ClassLoader?, className: String?, context: Context?): Application {
-    return super.newApplication(cl, HiltTestApplication::class.java.name, context)
-  }
-}
-```
-
 ### Robolectric
 
 <details>
@@ -528,9 +500,9 @@ class LoginKtTest {
   }
 }
 ```
-</details>
 
 ### Dependencies
+
 ```
 // Needed for createComposeRule , createAndroidComposeRule and other rules used to perform UI test
 testImplementation("androidx.compose.ui:ui-test-junit4:$compose_version") // used with robolectric to run ui test on jvm
@@ -541,14 +513,13 @@ androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_version")
 debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_version")
 ```
 
+</details>
+
 ### Android JUnit test
 
 *** Write few lines about Android JUnit test ***
 
-```
-// To perform UI automation test.
-androidTestImplementation("androidx.test.uiautomator:uiautomator:2.3.0")
-```
+Test uses `AndroidJUnitRunner` to run on android virtual/physical device.
 
 <details>
 <summary>Instrumentation test that runs on Virtual/Physical/GradleManagedDevice</summary>
@@ -563,16 +534,40 @@ Explain about system under test
 
 ```
 
+### Dependencies
+
+```
+// Used to create AndroidHiltTestRunner from AndroidJUnitRunner
+androidTestImplementation("androidx.test:runner:1.6.2")
+```
+
+### Setup
+
+```kotlin
+android {
+
+  defaultConfig {
+    // testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+    // If we are using Hilt we can extend the AndroidJUnitRunner and pass the HiltTestApplication as application component.
+    testInstrumentationRunner = "com.gandiva.android.sample.AndroidHiltTestRunner"
+  }
+}
+```
+
+```kotlin
+class AndroidHiltTestRunner : AndroidJUnitRunner() {
+  override fun newApplication(cl: ClassLoader?, className: String?, context: Context?): Application {
+    return super.newApplication(cl, HiltTestApplication::class.java.name, context)
+  }
+}
+```
+
 </details>
 
 ### UI Automator
 
 *** Write few lines about UI Automator ***
-
-```
-// To perform UI automation test.
-androidTestImplementation("androidx.test.uiautomator:uiautomator:2.3.0")
-```
 
 <details>
 <summary>Instrumentation test with UI Automator</summary>
@@ -586,6 +581,13 @@ Explain about system under test
 ```kotlin
 
 ```
+
+### Dependencies
+```
+// To perform UI automation test.
+androidTestImplementation("androidx.test.uiautomator:uiautomator:2.3.0")
+```
+
 </details>
 
 ### Command
