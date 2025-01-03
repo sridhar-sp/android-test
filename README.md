@@ -65,19 +65,6 @@ etc., to achieve this isolation.
 <details>
 <summary>Simple test without mocks</summary>
 
-```
-// Dependency
-
-// Regular JUnit dependency
-testImplementation("junit:junit:4.13.2")
-
-// Assertion library
-testImplementation("com.google.truth:truth:1.1.4")
-
-// Allows us to create and configure mock objects, stub methods, verify method invocations, and more
-testImplementation("io.mockk:mockk:1.13.5")
-```
-
 ### System under test
 
 ```kotlin
@@ -205,6 +192,19 @@ fun `should call logout callback when logout button is pressed`() = runTest(test
 
 </details>
 
+### Dependencies
+
+```
+// Regular JUnit dependency
+testImplementation("junit:junit:4.13.2")
+
+// Assertion library
+testImplementation("com.google.truth:truth:1.1.4")
+
+// Allows us to create and configure mock objects, stub methods, verify method invocations, and more
+testImplementation("io.mockk:mockk:1.13.5")
+```
+
 ### Command
 
 ```shell
@@ -230,35 +230,6 @@ UI testing usually refers testing the user interface by simulating user action a
 
 <details>
 <summary>Compose UI+Interaction Unit Test </summary>
-
-```
-// Dependencies 
-
-// Allows us to create and configure mock objects, stub methods, verify method invocations, and more
-androidTestImplementation("io.mockk:mockk-agent:1.13.5")
-androidTestImplementation("io.mockk:mockk-android:1.13.5")
-androidTestImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
-
-// Assertion library
-androidTestImplementation("com.google.truth:truth:1.1.4")
-
-// Needed for createComposeRule , createAndroidComposeRule and other rules used to perform UI test
-testImplementation("androidx.compose.ui:ui-test-junit4:$compose_version") // used with robolectric to run ui test on jvm
-androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_version") // used with AndroidTestRunner to run ui test on virtual/physical device.
-
-// Needed for createComposeRule(), but not for createAndroidComposeRule<YourActivity>():
-debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_version")
-
-// Dependency injection for For instrumented tests on JVM
-testImplementation("com.google.dagger:hilt-android-testing:2.49")
-kaptTest("com.google.dagger:hilt-compiler:2.49")
-
-// Needed to run android UI test on JVM instead of on an emulator or device
-testImplementation("org.robolectric:robolectric:4.10.3)
-
-// Helper for other arch dependencies, including JUnit test rules that can be used with LiveData, coroutines etc
-testImplementation("androidx.arch.core:core-testing:2.2.0")
-```
 
 ### System under test
 
@@ -367,6 +338,35 @@ class LoginKtTest {
 
 </details>
 
+### Dependencies
+
+```
+// Allows us to create and configure mock objects, stub methods, verify method invocations, and more
+androidTestImplementation("io.mockk:mockk-agent:1.13.5")
+androidTestImplementation("io.mockk:mockk-android:1.13.5")
+androidTestImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
+
+// Assertion library
+androidTestImplementation("com.google.truth:truth:1.1.4")
+
+// Needed for createComposeRule , createAndroidComposeRule and other rules used to perform UI test
+testImplementation("androidx.compose.ui:ui-test-junit4:$compose_version") // used with robolectric to run ui test on jvm
+androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_version") // used with AndroidTestRunner to run ui test on virtual/physical device.
+
+// Needed for createComposeRule(), but not for createAndroidComposeRule<YourActivity>():
+debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_version")
+
+// Dependency injection for For instrumented tests on JVM
+testImplementation("com.google.dagger:hilt-android-testing:2.49")
+kaptTest("com.google.dagger:hilt-compiler:2.49")
+
+// Needed to run android UI test on JVM instead of on an emulator or device
+testImplementation("org.robolectric:robolectric:4.10.3)
+
+// Helper for other arch dependencies, including JUnit test rules that can be used with LiveData, coroutines etc
+testImplementation("androidx.arch.core:core-testing:2.2.0")
+```
+
 ### Command
 
 ```shell
@@ -398,6 +398,7 @@ provided in the next section.
 
 Test uses `AndroidJUnitRunner` to run on android virtual/physical device.
 
+### Setup & Dependencies
 ```
 // Used to create AndroidHiltTestRunner from AndroidJUnitRunner
 androidTestImplementation("androidx.test:runner:1.6.2")
@@ -437,18 +438,6 @@ The `androidx.compose.ui.test.junit4` module includes a `ComposeTestRule` and an
 called `AndroidComposeTestRule`. Through this rule you can set Compose content or access the activity. You construct the
 rules using factory functions, either `createComposeRule` or, if you need access to an
 activity, `createAndroidComposeRule`.
-
-```
-// Dependencies 
-
-// Needed for createComposeRule , createAndroidComposeRule and other rules used to perform UI test
-testImplementation("androidx.compose.ui:ui-test-junit4:$compose_version") // used with robolectric to run ui test on jvm
-androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_version") // used with AndroidTestRunner to run ui test on virtual/physical device.
-
-// Required to add androidx.activity.ComponentActivity to test manifest.
-// Needed for createComposeRule(), but not for createAndroidComposeRule<YourActivity>():
-debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_version")
-```
 
 ### System under test
 
@@ -539,8 +528,18 @@ class LoginKtTest {
   }
 }
 ```
-
 </details>
+
+### Dependencies
+```
+// Needed for createComposeRule , createAndroidComposeRule and other rules used to perform UI test
+testImplementation("androidx.compose.ui:ui-test-junit4:$compose_version") // used with robolectric to run ui test on jvm
+androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_version") // used with AndroidTestRunner to run ui test on virtual/physical device.
+
+// Required to add androidx.activity.ComponentActivity to test manifest.
+// Needed for createComposeRule(), but not for createAndroidComposeRule<YourActivity>():
+debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_version")
+```
 
 ### Android JUnit test
 
