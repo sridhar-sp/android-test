@@ -531,7 +531,41 @@ Explain about system under test
 ### Test
 
 ```kotlin
+@HiltAndroidTest
+class MainScreenTest {
 
+    @get:Rule(order = 0)
+    val hiltAndroidRule = HiltAndroidRule(this)
+
+    /**
+     * Need a activity that annotated with @AndroidEntryPoint. and it has to be registered in manifest.
+     * Add comment why we used createAndroidComposeRule instead of composeTestRule
+     */
+    @get:Rule(order = 1)
+    val androidComposeRule = createAndroidComposeRule<DummyTestActivity>()
+  
+    @Test
+    fun shouldSuccessfullyLaunchProfileScreenWithEmailPostLogin() {
+
+        with(androidComposeRule) {
+            setContent { MainScreen() }
+
+            onNodeWithTag("emailInput").performTextInput("abc@gmail.com")
+            onNodeWithTag("passwordInput").performTextInput("12345")
+            onNodeWithTag("loginButton").performClick()
+
+            waitUntil(2500L) {
+                onAllNodesWithTag("welcomeMessageText").fetchSemanticsNodes().isNotEmpty()
+            }
+
+            onNodeWithTag("welcomeMessageText").assertTextEquals("Email as explicit argument abc@gmail.com")
+            onNodeWithTag("welcomeMessageText2")
+                .assertTextEquals("Email from saved state handle abc@gmail.com")
+
+            waitForIdle()
+        }
+    }
+}
 ```
 
 ### Dependencies

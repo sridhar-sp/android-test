@@ -14,7 +14,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-
 @HiltAndroidTest
 //@RunWith(AndroidJUnit4::class)
 class MainScreenTest {
