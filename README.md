@@ -7,18 +7,15 @@ different types of tests. It is designed to help beginners understand the fundam
 various tests are implemented.
 
 ## Different Types of Test
-A collection of samples to showcase various testing types that can be performed on the Android code base.
 
-Following are the different types of testing involved in android.
+The following are the primary testing types that are commonly used in software products:
 
 * Unit testing
 * UI testing
 * Integration testing
 * Performance testing
 
-<hr/>
-
-## Place of Execution
+### Place of Execution
 
 | Test                | Execution             |
 |---------------------|-----------------------|
@@ -35,23 +32,23 @@ its correctness and functionality. Developers often use frameworks like `Mockito
 etc., to achieve this isolation.
 
 * **Stub**: A stub is a direct replacement for a function, interface, or abstract class (or any other dependency). It
-  allows
-  us to swap the original implementation with a test-specific version, often referred to as a test dummy (or test
+  allows us to swap the original implementation with a test-specific version, often referred to as a test dummy (or test
   double).
+
 * **Mock**: A mock serves as a more advanced test double for a dependency. Mocking frameworks let us actively simulate
   different behaviours by configuring the mock to return specific responses based on inputs or conditions. Furthermore,
   mocks allow us to confirm interactions by verifying the existence of a method, its number of calls, and the arguments
   passed during each call.
+
 * **Why do we need this?** During testing, especially unit testing, we aim to isolate the component under test from its
   dependencies. This ensures that we're testing the component alone, making the tests simpler, faster, and less
   error-prone. Mocking or stubbing helps us avoid injecting side effects or relying on external dependencies.
+
 * **Example**: Imagine a ViewModel class that depends on a repository. The Repository class, in turn, makes network API
-  calls.
-  If we want to write a unit test for the ViewModel alone, we don’t want to incur the overhead of making actual API
-  calls, as this can make the test error-prone due to network conditions or server response times. To avoid these side
-  effects,
-  we can replace the repository with a stub (test double) or a mock during the test. This ensures that we focus only on
-  the behaviour of the ViewModel while bypassing external dependencies.
+  calls. If we want to write a unit test for the ViewModel alone, we don’t want to incur the overhead of making actual
+  API calls, as this can make the test error-prone due to network conditions or server response times. To avoid these
+  side effects, we can replace the repository with a stub (test double) or a mock during the test. This ensures that we
+  focus only on the behaviour of the ViewModel while bypassing external dependencies.
 
 ### Famous Unit Testing Frameworks
 
@@ -65,6 +62,18 @@ etc., to achieve this isolation.
 
 <details>
 <summary>Simple test without mocks</summary>
+
+In this test suite, we are validating the behavior of the `isValid()` method in the `Email` class. The `isValid()`
+method
+checks whether the email provided is a valid email address or not. We are testing three key scenarios:
+
+1. **Null Email:** Verifying that when the email value is `null`, the method returns `false`.
+2. **Invalid Email:** Checking various invalid email formats to ensure that the method correctly returns `false` for
+   them (e.g., missing domain, misplaced characters).
+3. **Valid Email:** Confirming that the method correctly returns `true` for properly formatted email addresses.
+
+Each test ensures the `isValid()` method behaves as expected under different conditions, guaranteeing that the email
+validation works correctly.
 
 ### System Under Test
 
