@@ -13,7 +13,7 @@ Following are the different types of testing involved in android.
 
 ## Place of execution
 
-| Test 				           | Execution             |
+| Test                | Execution             |
 |---------------------|-----------------------|
 | Unit testing        | JVM                   |
 | UI testing          | JVM or Android device |
@@ -31,34 +31,28 @@ etc., to achieve this isolation.
   allows
   us to swap the original implementation with a test-specific version, often referred to as a test dummy (or test
   double).
-
-
 * **Mock**: A mock serves as a more advanced test double for a dependency. Mocking frameworks let us actively simulate
   different behaviours by configuring the mock to return specific responses based on inputs or conditions. Furthermore,
   mocks allow us to confirm interactions by verifying the existence of a method, its number of calls, and the arguments
   passed during each call.
-
-
 * **Why do we need this?** During testing, especially unit testing, we aim to isolate the component under test from its
   dependencies. This ensures that we're testing the component alone, making the tests simpler, faster, and less
   error-prone. Mocking or stubbing helps us avoid injecting side effects or relying on external dependencies.
-
-
 * **Example**: Imagine a ViewModel class that depends on a repository. The Repository class, in turn, makes network API
   calls.
   If we want to write a unit test for the ViewModel alone, we don’t want to incur the overhead of making actual API
-  calls,
-  as this can make the test error-prone due to network conditions or server response times. To avoid these side effects,
+  calls, as this can make the test error-prone due to network conditions or server response times. To avoid these side
+  effects,
   we can replace the repository with a stub (test double) or a mock during the test. This ensures that we focus only on
   the behaviour of the ViewModel while bypassing external dependencies.
 
 ### Famous Unit testing frameworks
 
-| Framework 			 | Description                                             |    
-|---------------|---------------------------------------------------------|
-| Junit         | Testing framework for Java                              |
-| Mockito       | Mocking framework for unit tests written in Java/Kotlin |
-| Truth         | To perform assertions in tests                          |
+| Framework | Description                                             |
+|-----------|---------------------------------------------------------|
+| Junit     | Testing framework for Java                              |
+| Mockito   | Mocking framework for unit tests written in Java/Kotlin |
+| Truth     | To perform assertions in tests                          |
 
 ### Example
 
@@ -134,7 +128,6 @@ fun `should return email value from saved state handle when email address is rea
 ```
 
 </details>
-
 
 <details>
 <summary>Test with mocks and stubs</summary>
@@ -219,12 +212,12 @@ UI testing usually refers testing the user interface by simulating user action a
 
 ### Famous UI testing frameworks
 
-| Framework 			         | Description                                                                                                                   |        
+| Framework             | Description                                                                                                                   |
 |-----------------------|-------------------------------------------------------------------------------------------------------------------------------|
-| Espresso		   	        | Android UI test framework to perform UI interaction and state assertion.  (White box testing)                                 |
+| Espresso              | Android UI test framework to perform UI interaction and state assertion.  (White box testing)                                 |
 | UI Automator          | To perform cross-app functional UI testing across system and installed apps. (Both Black box & white box testing)             |
 | Compose UI test Junit | To provide Junit rules invoke composable function in Junit. also provides APIs to perform UI interaction and state assertion. |
-| Appium				            | *Yet to add *	                                                                                                                |
+| Appium                | *Yet to add *                                                                                                                 |
 
 ### Compose UI test Junit
 
@@ -232,15 +225,14 @@ UI testing usually refers testing the user interface by simulating user action a
 <summary>Compose UI+Interaction Unit Test </summary>
 
 `RobolectricTestRunner` is a JUnit Test Runner that enables running test code directly on the `JVM`, eliminating the
-need
-for a virtual or physical Android device. By executing tests on the `JVM`, it significantly improves test execution
-speed,
-ensures consistent results, and simplifies the testing process.
+need for a virtual or physical Android device. By executing tests on the `JVM`, it significantly improves test execution
+speed, ensures consistent results, and simplifies the testing process.
 
 However, certain classes and methods from the `android.jar` library require special configurations to function
-correctly.
-For instance, accessing Android resources or handling methods like Log may need adjustments to return default or mocked
-values.
+correctly. For instance, accessing Android resources or handling methods like Log may need adjustments to return default
+or mocked values.
+
+### Setup
 
 ```
 testOptions {
@@ -382,7 +374,6 @@ testImplementation("androidx.arch.core:core-testing:2.2.0")
 
 <hr/>
 
-
 ## Integration testing
 
 Integration testing typically involves testing the interactions between different components or modules of an
@@ -397,11 +388,11 @@ provided in the next section.
 
 ### Integration Testing Frameworks
 
-| Framework 			        | Description                                                                                                                                                                                                                                                                |
-|----------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Robolectric			       | 	 To perform android UI/functional testing on JVM without the need for android device.<br/> * Test files are located inside the test folder                                                                                                                                |
-| AndroidX test runner | Provides AndroidJUnitRunner which is a JUnit test runner that allows to run instrumented JUnit 4 tests on Android devices, including those using the Espresso, UI Automator, and Compose testing frameworks. <br/> * Test files are located inside the androidTest folder. |
-| UI Automator         |                                                                                                                                                                                                                                                                            |
+| Framework            | Description                                                                                                                                                                                                                                                               |
+|----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Robolectric          | To perform android UI/functional testing on JVM without the need for android device.<br/> * Test files are located inside the test folder                                                                                                                                 |
+| AndroidX test runner | Provides AndroidJUnitRunner which is a JUnit test runner that allows to run instrumented JUnit 4 tests on Android devices, including those using the Espresso, UI Automator, and Compose testing frameworks.<br/> * Test files are located inside the androidTest folder. |
+| UI Automator         |                                                                                                                                                                                                                                                                           |
 
 You can observe from the below test cases written to run on `RobolectricTestRunner` and `AndroidJUnitRunner` it look
 similar to the Compose UI Unit Test code snippet, because `androidx.compose.ui.test.junit4` library has the test
@@ -508,6 +499,14 @@ class LoginKtTest {
 }
 ```
 
+<details>
+
+<summary>See in action</summary>
+
+[![JourneyTest.gif](docs/LoginTest.gif)](LoginTest.gif)
+
+</details>
+
 ### Dependencies
 
 ```
@@ -542,7 +541,9 @@ including those using the `Espresso`, `UI Automator`, and `Compose` testing fram
 
 ### System under test
 
-Explain about system under test*****
+Consider we have two screens, `LoginScreen` and `ProfileScreen`. The `LoginScreen` contains `email` and `password` input
+fields along with a `submit` button. On pressing the `submit` button, it should navigate to `ProfileScreen`, where the
+user is greeted with their `email` ID.
 
 ### Test
 
@@ -584,6 +585,14 @@ class MainScreenTest {
 }
 ```
 
+<details>
+
+<summary>See in action</summary>
+
+[![JourneyTest.gif](docs/MainScreenTest.gif)](MainScreenTest.gif)
+
+</details>
+
 ### Dependencies
 
 ```
@@ -617,8 +626,6 @@ class AndroidHiltTestRunner : AndroidJUnitRunner() {
 
 ### UI Automator
 
-*** Write few lines about UI Automator ***
-
 UI Automator is a UI testing framework designed for cross-app functional UI testing, allowing interaction with both
 system and installed apps. Unlike frameworks that are limited to the app under test, UI Automator provides a wide range
 of APIs to interact with the entire device.
@@ -634,7 +641,9 @@ component or its content description, making test scripts more intuitive and rea
 
 ### System under test
 
-Explain about system under test***
+Consider we have two screens, `LoginScreen` and `ProfileScreen`. The `LoginScreen` contains `email` and `password` input
+fields along with a `submit` button. On pressing the `submit` button, it should navigate to `ProfileScreen`, where the
+user is greeted with their `email` ID.
 
 ### Test
 
@@ -697,7 +706,16 @@ class LoginJourneyTest {
 }
 ```
 
+<details>
+
+<summary>See in action</summary>
+
+[![JourneyTest.gif](docs/JourneyTest.gif)](JourneyTest.gif)
+
+</details>
+
 ### Dependencies
+
 ```
 // To perform UI automation test.
 androidTestImplementation("androidx.test.uiautomator:uiautomator:2.3.0")
@@ -744,6 +762,7 @@ testOptions {
 ```shell
 ./gradlew testDeviceDebugAndroidTest
 ```
+
 <hr/>
 
 ## Reference
@@ -768,7 +787,7 @@ testOptions {
 * Mock vs Stub
 * Difference between AndroidJunitRunner and RobolectricTestRunner
 * Example to Replace a binding in a single test
-* Different types smoke testing 
+* Different types smoke testing
   * Smoke
   * Regression (a return to a previous and less advanced or worse state, condition, or way of behaving)
 
@@ -830,4 +849,3 @@ testImplementation("com.google.truth:truth:1.1.4")
 // Allows us to create and configure mock objects, stub methods, verify method invocations, and more
 testImplementation("io.mockk:mockk:1.13.5")
 ```
-
