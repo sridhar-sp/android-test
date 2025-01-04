@@ -1,5 +1,12 @@
 # Android testing
 
+## Target Audience for This Blog
+
+This blog covers the basics of testing in Android, providing insights into setup, dependencies, and an introduction to
+different types of tests. It is designed to help beginners understand the fundamentals of Android testing and how
+various tests are implemented.
+
+## Different Types of Test
 A collection of samples to showcase various testing types that can be performed on the Android code base.
 
 Following are the different types of testing involved in android.
@@ -11,7 +18,7 @@ Following are the different types of testing involved in android.
 
 <hr/>
 
-## Place of execution
+## Place of Execution
 
 | Test                | Execution             |
 |---------------------|-----------------------|
@@ -21,7 +28,7 @@ Following are the different types of testing involved in android.
 
 <hr/>
 
-## Unit testing
+## Unit Testing
 
 Unit testing usually refers to testing a particular unit of code in complete isolation from other components to ensure
 its correctness and functionality. Developers often use frameworks like `Mockito` to create stubs (test doubles), mocks,
@@ -46,7 +53,7 @@ etc., to achieve this isolation.
   we can replace the repository with a stub (test double) or a mock during the test. This ensures that we focus only on
   the behaviour of the ViewModel while bypassing external dependencies.
 
-### Famous Unit testing frameworks
+### Famous Unit Testing Frameworks
 
 | Framework | Description                                             |
 |-----------|---------------------------------------------------------|
@@ -59,7 +66,7 @@ etc., to achieve this isolation.
 <details>
 <summary>Simple test without mocks</summary>
 
-### System under test
+### System Under Test
 
 ```kotlin
 data class Email(val value: String?) : Parcelable {
@@ -100,7 +107,7 @@ class EmailTest {
 <details>
 <summary>Simple test with mocks</summary>
 
-### System under test
+### System Under Test
 
 ```kotlin
 @HiltViewModel
@@ -132,7 +139,7 @@ fun `should return email value from saved state handle when email address is rea
 <details>
 <summary>Test with mocks and stubs</summary>
 
-### System under test
+### System Under Test
 
 ```kotlin
 @HiltViewModel
@@ -206,11 +213,11 @@ testImplementation("io.mockk:mockk:1.13.5")
 
 <hr/>
 
-## UI testing
+## UI Testing
 
 UI testing usually refers testing the user interface by simulating user action and verify the behavior of UI elements.
 
-### Famous UI testing frameworks
+### Famous UI Testing Frameworks
 
 | Framework             | Description                                                                                                                   |
 |-----------------------|-------------------------------------------------------------------------------------------------------------------------------|
@@ -219,33 +226,29 @@ UI testing usually refers testing the user interface by simulating user action a
 | Compose UI test Junit | To provide Junit rules invoke composable function in Junit. also provides APIs to perform UI interaction and state assertion. |
 | Appium                | *Yet to add *                                                                                                                 |
 
-### Compose UI test Junit
+### Compose UI + Interaction Unit Test
+
+The Compose UI test framework allows you to verify that the behavior of your Compose code works as expected. It provides
+a set of testing APIs that help you find UI elements, check their attributes, and perform user actions. Using these
+APIs, you can mount composable content and assert expected behaviors.
+
+The `androidx.compose.ui.test.junit4` module includes a `ComposeTestRule` and an implementation for Android
+called `AndroidComposeTestRule`. Through this rule you can set Compose content or access the activity.
+You construct the rules using factory functions, either `createComposeRule` or, if you need access to an
+activity, `createAndroidComposeRule`.
+
+For Compose UI Unit Tests, you can use the `RobolectricTestRunner`, a JUnit Test Runner that runs test code directly on
+the `JVM`. This eliminates the need for a physical or virtual Android device, significantly speeding up test execution,
+ensuring consistent results, and simplifying the testing process.
+
+However, some classes and methods from `android.jar` require additional configuration to function correctly. For
+example, accessing Android resources or using methods like Log might need adjustments to return default or mocked
+values. Please refer to the setup section below for the necessary configuration.
 
 <details>
-<summary>Compose UI+Interaction Unit Test </summary>
+<summary>Example : Compose UI + Interaction Unit Test</summary>
 
-`RobolectricTestRunner` is a JUnit Test Runner that enables running test code directly on the `JVM`, eliminating the
-need for a virtual or physical Android device. By executing tests on the `JVM`, it significantly improves test execution
-speed, ensures consistent results, and simplifies the testing process.
-
-However, certain classes and methods from the `android.jar` library require special configurations to function
-correctly. For instance, accessing Android resources or handling methods like Log may need adjustments to return default
-or mocked values.
-
-### Setup
-
-```
-testOptions {
-        unitTests {
-            // Enables unit tests to use Android resources, assets, and manifests.
-            isIncludeAndroidResources = true
-            // Whether unmocked methods from android.jar should throw exceptions or return default values (i.e. zero or null).
-            isReturnDefaultValues = true
-        }
-}
-```
-
-### System under test
+### System Under Test
 
 ```kotlin
 @Composable
@@ -366,6 +369,19 @@ testImplementation("org.robolectric:robolectric:4.10.3)
 testImplementation("androidx.arch.core:core-testing:2.2.0")
 ```
 
+### Setup
+
+```
+testOptions {
+        unitTests {
+            // Enables unit tests to use Android resources, assets, and manifests.
+            isIncludeAndroidResources = true
+            // Whether unmocked methods from android.jar should throw exceptions or return default values (i.e. zero or null).
+            isReturnDefaultValues = true
+        }
+}
+```
+
 ### Command
 
 ```shell
@@ -409,7 +425,7 @@ activity, `createAndroidComposeRule`.
 <details>
 <summary>Instrumentation test with Robolectric</summary>
 
-### System under test
+### System Under Test
 
 ```kotlin
 @Composable
@@ -539,7 +555,7 @@ including those using the `Espresso`, `UI Automator`, and `Compose` testing fram
 <details>
 <summary>Instrumentation test that runs on Virtual/Physical/GradleManagedDevice</summary>
 
-### System under test
+### System Under Test
 
 Consider we have two screens, `LoginScreen` and `ProfileScreen`. The `LoginScreen` contains `email` and `password` input
 fields along with a `submit` button. On pressing the `submit` button, it should navigate to `ProfileScreen`, where the
@@ -639,7 +655,7 @@ component or its content description, making test scripts more intuitive and rea
 <details>
 <summary>Instrumentation test with UI Automator</summary>
 
-### System under test
+### System Under Test
 
 Consider we have two screens, `LoginScreen` and `ProfileScreen`. The `LoginScreen` contains `email` and `password` input
 fields along with a `submit` button. On pressing the `submit` button, it should navigate to `ProfileScreen`, where the
@@ -762,6 +778,15 @@ testOptions {
 ```shell
 ./gradlew testDeviceDebugAndroidTest
 ```
+
+<hr/>
+
+## Test Your Code, Rest Your Worries
+
+*
+
+*_With a sturdy suite of tests as steadfast as a fortress, developers can confidently push code even on a Friday evening
+and log off without a trace of worry._**
 
 <hr/>
 
