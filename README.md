@@ -61,7 +61,7 @@ etc., to achieve this isolation.
 ### Example
 
 <details>
-<summary>Simple test without mocks</summary>
+<summary>Simple Test Without Mocks</summary>
 
 In this test suite, we are validating the behavior of the `isValid()` method in the `Email` class. The `isValid()`
 method
@@ -114,7 +114,23 @@ class EmailTest {
 </details>
 
 <details>
-<summary>Simple test with mocks</summary>
+<summary>Simple Test With Mocks</summary>
+
+In this test, we are verifying the behavior of the `ProfileViewModel` class, specifically the retrieval of the email
+address from the `SavedStateHandle`. The test mocks the `SavedStateHandle` to simulate retrieving an email address from
+the saved state.
+
+1. **Mocking Dependencies:** We use mockk to mock the `SavedStateHandle` and `LogoutUseCase`, which are dependencies in
+   the `ProfileViewModel`.
+
+2. **Testing Behavior:** The mock for `SavedStateHandle` is configured to return a predefined email
+   address `abcd@gmail.com` when the `KEY_EMAIL` key is accessed.
+
+3. **Validation:** After initializing the `ProfileViewModel`, we assert that the `emailAddress` property correctly
+   retrieves the mocked email value from the `SavedStateHandle`.
+
+This test ensures that the `ProfileViewModel` correctly reads the email address from the saved state during its
+initialization.
 
 ### System Under Test
 
@@ -146,7 +162,25 @@ fun `should return email value from saved state handle when email address is rea
 </details>
 
 <details>
-<summary>Test with mocks and stubs</summary>
+<summary>Test With Mocks and Stubs</summary>
+
+In this test, we are testing the behavior of the `ProfileViewModel` class when the `logout` function is called, ensuring
+that the logout process is correctly triggered and the `shouldLogout` state is updated.
+
+Let me use `AAA` test pattern to explain the test case. `AAA` stands for **Arrange**, **Act**, and **Assert**.
+
+1. **Arrange:: Mocking and Stub Dependencies:** We mock the `SavedStateHandle` to simulate retrieving the `email`
+   address from the saved state, and we stub the `LogoutUseCase` to simulate a successful logout without performing the
+   actual logic.
+
+2. **Act:: Triggering Logout:** The `logout` function is called on the `ProfileViewModel`, and the coroutine is run to
+   completion using `runCurrent()`.
+
+3. **Assert:** The test asserts that after calling `logout`, the `shouldLogout` state is updated to `true` and that
+   the `logout` function was successfully called, as indicated by the `isLogoutSuccess` flag being `true`.
+
+This test ensures that the `ProfileViewModel` correctly handles the `logout` process, updating the appropriate states
+and interacting with the `LogoutUseCase`.
 
 ### System Under Test
 
