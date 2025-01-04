@@ -231,11 +231,16 @@ UI testing usually refers testing the user interface by simulating user action a
 <details>
 <summary>Compose UI+Interaction Unit Test </summary>
 
-### System under test
+`RobolectricTestRunner` is a JUnit Test Runner that enables running test code directly on the `JVM`, eliminating the
+need
+for a virtual or physical Android device. By executing tests on the `JVM`, it significantly improves test execution
+speed,
+ensures consistent results, and simplifies the testing process.
 
-Test uses `RobolectricTestRunner` to run code on `JVM`.
-Some code from `android.jar` requires special config to return use android resources and return default values (i.e.,
-Log methods).
+However, certain classes and methods from the `android.jar` library require special configurations to function
+correctly.
+For instance, accessing Android resources or handling methods like Log may need adjustments to return default or mocked
+values.
 
 ```
 testOptions {
@@ -247,6 +252,8 @@ testOptions {
         }
 }
 ```
+
+### System under test
 
 ```kotlin
 @Composable
@@ -396,20 +403,20 @@ provided in the next section.
 | AndroidX test runner | Provides AndroidJUnitRunner which is a JUnit test runner that allows to run instrumented JUnit 4 tests on Android devices, including those using the Espresso, UI Automator, and Compose testing frameworks. <br/> * Test files are located inside the androidTest folder. |
 | UI Automator         |                                                                                                                                                                                                                                                                            |
 
-### Robolectric
-
-<details>
-<summary>Instrumentation test with Robolectric</summary>
-
-You can observe from the test cases it look similar to the Compose UI Unit Test code snippet,
-because `androidx.compose.ui.test.junit4` library has the test implementation for both the JVM and Android. so using the
-same interfaces we can run the test on both runtime. Based on the test runner configured it will use the corresponding
-implementation at runtime.
+You can observe from the below test cases written to run on `RobolectricTestRunner` and `AndroidJUnitRunner` it look
+similar to the Compose UI Unit Test code snippet, because `androidx.compose.ui.test.junit4` library has the test
+implementation for both the JVM and Android. so using the same interfaces we can run the test on both runtime. Based on
+the test runner configured it will use the corresponding implementation at runtime.
 
 The `androidx.compose.ui.test.junit4` module includes a `ComposeTestRule` and an implementation for Android
 called `AndroidComposeTestRule`. Through this rule you can set Compose content or access the activity. You construct the
 rules using factory functions, either `createComposeRule` or, if you need access to an
 activity, `createAndroidComposeRule`.
+
+### Robolectric
+
+<details>
+<summary>Instrumentation test with Robolectric</summary>
 
 ### System under test
 
@@ -513,20 +520,29 @@ androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_version")
 debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_version")
 ```
 
+### Setup
+
+Create a `app/src/test/resources/robolectric.properties` file and define the robolectric properties.
+
+```properties
+instrumentedPackages=androidx.loader.content
+application=dagger.hilt.android.testing.HiltTestApplication
+sdk=29
+```
+
 </details>
 
 ### Android JUnit test
 
-*** Write few lines about Android JUnit test ***
-
-Test uses `AndroidJUnitRunner` to run on android virtual/physical device.
+`AndroidJUnitRunner` is a test runner which lets us run the test on android virtual/physical/GradleManaged devices,
+including those using the `Espresso`, `UI Automator`, and `Compose` testing frameworks.
 
 <details>
 <summary>Instrumentation test that runs on Virtual/Physical/GradleManagedDevice</summary>
 
 ### System under test
 
-Explain about system under test
+Explain about system under test*****
 
 ### Test
 
@@ -603,17 +619,82 @@ class AndroidHiltTestRunner : AndroidJUnitRunner() {
 
 *** Write few lines about UI Automator ***
 
+UI Automator is a UI testing framework designed for cross-app functional UI testing, allowing interaction with both
+system and installed apps. Unlike frameworks that are limited to the app under test, UI Automator provides a wide range
+of APIs to interact with the entire device.
+
+This enables true cross-app functional testing, such as opening the device settings, disabling the network, and then
+launching your app to verify how it handles a no-network condition.
+
+With UI Automator, you can easily locate UI components using convenient descriptors like the text displayed on the
+component or its content description, making test scripts more intuitive and readable.
+
 <details>
 <summary>Instrumentation test with UI Automator</summary>
 
 ### System under test
 
-Explain about system under test
+Explain about system under test***
 
 ### Test
 
 ```kotlin
 
+private const val BASIC_SAMPLE_PACKAGE = "com.gandiva.android.sample"
+private const val LAUNCH_TIMEOUT = 5000L
+
+@HiltAndroidTest
+class LoginJourneyTest {
+
+    private lateinit var device: UiDevice
+
+    @get:Rule
+    val hiltAndroidRule = HiltAndroidRule(this)
+
+    @Before
+    fun startMainActivityFromHomeScreen() {
+        // Initialize UiDevice instance
+        device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+
+        // Start from the home screen
+        device.pressHome()
+
+        // Wait for launcher
+        val launcherPackage: String = device.launcherPackageName
+        MatcherAssert.assertThat(launcherPackage, CoreMatchers.notNullValue())
+        device.wait(Until.hasObject(By.pkg(launcherPackage).depth(0)), LAUNCH_TIMEOUT)
+
+        // Launch the app
+        val context = ApplicationProvider.getApplicationContext<Context>()
+        val intent = context.packageManager.getLaunchIntentForPackage(BASIC_SAMPLE_PACKAGE)
+            ?.apply { addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK) }
+        context.startActivity(intent)
+
+        // Wait for the app to appear
+        device.wait(Until.hasObject(By.pkg(BASIC_SAMPLE_PACKAGE).depth(0)), LAUNCH_TIMEOUT)
+    }
+
+
+    @Test
+    fun shouldLaunchProfileScreenWhenLoginIsSuccess() {
+        device.enterTextOnFieldWithId("emailInput", "hello@gmail.com")
+        device.enterTextOnFieldWithId("passwordInput", "123456")
+
+        device.wait(Until.hasObject(By.res("loginButton").enabled(true)), 1500L)
+        assertThat(device.findObject(By.res("loginButton")).isEnabled).isEqualTo(true)
+
+        device.clickFieldWithId("loginButton")
+
+        device.wait(Until.hasObject(By.res("hasObject")), 3000L)
+
+        assertThat(device.textFromFieldWithId("welcomeMessageText"))
+            .isEqualTo("Email as explicit argument hello@gmail.com")
+        assertThat(device.textFromFieldWithId("welcomeMessageText2"))
+            .isEqualTo("Email from saved state handle hello@gmail.com")
+
+        device.waitForIdle()
+    }
+}
 ```
 
 ### Dependencies
@@ -676,6 +757,7 @@ testOptions {
 * https://martinfowler.com/bliki/TestDouble.html
 * https://developer.android.com/studio/test/gradle-managed-devices
 * https://developer.android.com/training/testing/other-components/ui-automator
+* https://developer.android.com/training/testing/instrumented-tests/androidx-test-libraries/runner
 
 <hr/>
 
