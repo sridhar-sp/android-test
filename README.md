@@ -120,7 +120,8 @@ In this test, we are verifying the behavior of the `ProfileViewModel` class, spe
 address from the `SavedStateHandle`. The test mocks the `SavedStateHandle` to simulate retrieving an email address from
 the saved state.
 
-1. **Mocking Dependencies:** We use mockk to mock the `SavedStateHandle` and `LogoutUseCase`, which are dependencies in
+1. **Mocking Dependencies:** We use `mockk` to mock the `SavedStateHandle` and `LogoutUseCase`, which are dependencies
+   in
    the `ProfileViewModel`.
 
 2. **Testing Behavior:** The mock for `SavedStateHandle` is configured to return a predefined email
@@ -231,7 +232,7 @@ fun `should call logout callback when logout button is pressed`() = runTest(test
     // Assert    
     assertThat(profileViewModel.shouldLogout).isTrue()
     assertThat(isLogoutSuccess).isTrue()
-  }
+    }
 ```
 
 </details>
@@ -827,10 +828,8 @@ testOptions {
 
 ## Test Your Code, Rest Your Worries
 
-*
-
-*_With a sturdy suite of tests as steadfast as a fortress, developers can confidently push code even on a Friday evening
-and log off without a trace of worry._**
+With a sturdy suite of tests as steadfast as a fortress, developers can confidently push code even on a Friday evening
+and log off without a trace of worry.
 
 <hr/>
 
