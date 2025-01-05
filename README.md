@@ -210,7 +210,8 @@ class ProfileViewModel @Inject constructor(
 @Test
 fun `should call logout callback when logout button is pressed`() = runTest(testDispatcher) {
     Dispatchers.setMain(testDispatcher)
-
+        
+    // Arrange    
     val savedStateHandleMock = mockk<SavedStateHandle>()
     every<String?> { savedStateHandleMock[BundleArgs.KEY_EMAIL] } returns "abcd@gmail.com"
 
@@ -220,14 +221,14 @@ fun `should call logout callback when logout button is pressed`() = runTest(test
         isLogoutSuccess = true
       }
     }
-
+        
     val profileViewModel = ProfileViewModel(savedStateHandleMock, logoutStub)
-    assertThat(profileViewModel.emailAddress).isEqualTo("abcd@gmail.com")
-    assertThat(profileViewModel.shouldLogout).isFalse()
 
+    // Act    
     profileViewModel.logout()
     runCurrent()  // run current co routine to completion
 
+    // Assert    
     assertThat(profileViewModel.shouldLogout).isTrue()
     assertThat(isLogoutSuccess).isTrue()
   }
