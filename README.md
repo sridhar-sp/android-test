@@ -872,6 +872,12 @@ and log off without a trace of worry.
 * https://developer.android.com/training/testing/other-components/ui-automator
 * https://developer.android.com/training/testing/instrumented-tests/androidx-test-libraries/runner
 
+## Blogs
+* https://medium.com/@sridhar-sp/getting-started-with-android-testing-building-reliable-apps-with-confidence-5bd534df54cc
+* https://medium.com/@sridhar-sp/getting-started-with-android-testing-building-reliable-apps-with-confidence-ed18539d856b
+* https://medium.com/@sridhar-sp/getting-started-with-android-testing-building-reliable-apps-with-confidence-part-3-3-6022a55c5a2d
+
+
 <hr/>
 
 #### Todo
