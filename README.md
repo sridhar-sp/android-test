@@ -451,24 +451,37 @@ provided in the next section.
 |----------------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | Robolectric          | To perform android UI/functional testing on JVM without the need for android device.<br/> * Test files are located inside the test folder                                                                                                                                 |
 | AndroidX test runner | Provides AndroidJUnitRunner which is a JUnit test runner that allows to run instrumented JUnit 4 tests on Android devices, including those using the Espresso, UI Automator, and Compose testing frameworks.<br/> * Test files are located inside the androidTest folder. |
-| UI Automator         |                                                                                                                                                                                                                                                                           |
+| UI Automator         | A UI testing framework designed for cross-app functional testing, enabling interactions with both system apps and installed apps. <br/> * Test files are located inside the androidTest folder.                                                                           |
 
-You can observe from the below test cases written to run on `RobolectricTestRunner` and `AndroidJUnitRunner` it look
-similar to the Compose UI Unit Test code snippet, because `androidx.compose.ui.test.junit4` library has the test
-implementation for both the JVM and Android. so using the same interfaces we can run the test on both runtime. Based on
-the test runner configured it will use the corresponding implementation at runtime.
+The following test cases, written for `RobolectricTestRunner` and `AndroidJUnitRunner`, appear similar to the Compose UI
+Unit Test code snippet. This is because the `androidx.compose.ui.test.junit4` library provides test implementations for
+both JVM and Android. Using the same interfaces, tests can run on either runtime. The appropriate implementation is
+selected at runtime based on the configured test runner.
 
-The `androidx.compose.ui.test.junit4` module includes a `ComposeTestRule` and an implementation for Android
-called `AndroidComposeTestRule`. Through this rule you can set Compose content or access the activity. You construct the
-rules using factory functions, either `createComposeRule` or, if you need access to an
-activity, `createAndroidComposeRule`.
+The `androidx.compose.ui.test.junit4` module provides the `ComposeTestRule` and its Android-specific
+implementation, `AndroidComposeTestRule`. These rules allow you to set Compose content or access the activity. You can
+construct these rules using factory functions: `createComposeRule` for general use or `createAndroidComposeRule` if
+activity access is required.
 
 ### Robolectric
 
 <details>
-<summary>Instrumentation test with Robolectric</summary>
+<summary>Example</summary>
 
 ### System Under Test
+
+In this test, we are verifying the behavior of the **Login** composable screen by ensuring that the login button is
+enabled only when the inputs provided by the user are valid.
+
+1. **Initial State Validation:** The test confirms that the login button is initially disabled when no inputs are
+   provided.
+2. **Partial Input Validation:** The test simulates entering invalid email and password combinations step-by-step to
+   ensure that the button remains disabled until all conditions for validity are met.
+3. **Valid Input Validation:** Finally, the test validates that the login button becomes enabled only when both the
+   email and password meet the required validation criteria (a valid email format and a password of sufficient length).
+
+This test ensures that the **Login** composable correctly enforces input validation and enables the login button only
+under valid conditions.
 
 ```kotlin
 @Composable
@@ -534,17 +547,22 @@ class LoginKtTest {
 
     with(composeRule) {
       setContent { Login(onSuccess = {}, viewModel = loginViewModel) }
+        // Initial State Validation  
       onNodeWithTag("loginButton").assertIsNotEnabled()
 
+        // Partial Input Validation
       onNodeWithTag("emailInput").performTextInput("abcd")
       onNodeWithTag("loginButton").assertIsNotEnabled()
 
+        // Partial Input Validation  
       onNodeWithTag("emailInput").performTextInput("abcd@gmail.com")
       onNodeWithTag("loginButton").assertIsNotEnabled()
 
+        // Partial Input Validation  
       onNodeWithTag("passwordInput").performTextInput("12")
       onNodeWithTag("loginButton").assertIsNotEnabled()
 
+        // Valid Input Validation  
       onNodeWithTag("passwordInput").performTextInput("12345")
       onNodeWithTag("loginButton").assertIsEnabled()
     }
@@ -556,7 +574,7 @@ class LoginKtTest {
 
 <summary>See in action</summary>
 
-[![JourneyTest.gif](docs/LoginTest.gif)](LoginTest.gif)
+[![LoginTest.gif](docs/LoginTest.gif)](LoginTest.gif)
 
 </details>
 
@@ -597,13 +615,18 @@ sdk=29
 including those using the `Espresso`, `UI Automator`, and `Compose` testing frameworks.
 
 <details>
-<summary>Instrumentation test that runs on Virtual/Physical/GradleManagedDevice</summary>
+<summary>Example</summary>
 
 ### System Under Test
 
-Consider we have two screens, `LoginScreen` and `ProfileScreen`. The `LoginScreen` contains `email` and `password` input
-fields along with a `submit` button. On pressing the `submit` button, it should navigate to `ProfileScreen`, where the
-user is greeted with their `email` ID.
+We have two screens: `LoginScreen` and `ProfileScreen`.
+
+- The `LoginScreen` contains:
+    - `email` and `password` input fields
+    - A `submit` button
+- Functionality:
+    - Pressing the `submit` button navigates the user to the `ProfileScreen`.
+    - The `ProfileScreen` greets the user with a message displaying their `email` ID.
 
 ### Test
 
@@ -649,7 +672,7 @@ class MainScreenTest {
 
 <summary>See in action</summary>
 
-[![JourneyTest.gif](docs/MainScreenTest.gif)](MainScreenTest.gif)
+[![MainScreenTest.gif](docs/MainScreenTest.gif)](MainScreenTest.gif)
 
 </details>
 
@@ -697,13 +720,16 @@ With UI Automator, you can easily locate UI components using convenient descript
 component or its content description, making test scripts more intuitive and readable.
 
 <details>
-<summary>Instrumentation test with UI Automator</summary>
+<summary>Example</summary>
 
 ### System Under Test
 
-Consider we have two screens, `LoginScreen` and `ProfileScreen`. The `LoginScreen` contains `email` and `password` input
-fields along with a `submit` button. On pressing the `submit` button, it should navigate to `ProfileScreen`, where the
-user is greeted with their `email` ID.
+We use an Android device as the system under test. The process begins by launching the home intent, bringing the device
+to the home screen. Once the home app is launched, we proceed to open our app for testing.
+
+The test scenario remains the same: we navigate to the `LoginScreen`, enter the `email` and `password`, and press the
+submit button. Upon successful submission, the app navigates to the `ProfileScreen`, where the user is greeted with
+their `email` ID.
 
 ### Test
 
