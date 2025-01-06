@@ -619,7 +619,7 @@ including those using the `Espresso`, `UI Automator`, and `Compose` testing fram
 
 ### System Under Test
 
-We have two screens: `LoginScreen` and `ProfileScreen`.
+We have two composable screens: `LoginScreen` and `ProfileScreen`, both inside `MainScreen`.
 
 - The `LoginScreen` contains:
     - `email` and `password` input fields
@@ -697,6 +697,8 @@ android {
 }
 ```
 
+* Place the file inside `app/src/androidTest/java/../AndroidHiltTestRunner.kt`
+
 ```kotlin
 class AndroidHiltTestRunner : AndroidJUnitRunner() {
   override fun newApplication(cl: ClassLoader?, className: String?, context: Context?): Application {
@@ -734,7 +736,6 @@ their `email` ID.
 ### Test
 
 ```kotlin
-
 private const val BASIC_SAMPLE_PACKAGE = "com.gandiva.android.sample"
 private const val LAUNCH_TIMEOUT = 5000L
 
