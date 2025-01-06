@@ -293,6 +293,19 @@ values. Please refer to the setup section below for the necessary configuration.
 <details>
 <summary>Example : Compose UI + Interaction Unit Test</summary>
 
+In this test, we are verifying the behavior of the **Login** composable screen by ensuring that the login button is
+enabled only when the inputs provided by the user are valid.
+
+1. **Initial State Validation:** The test confirms that the login button is initially disabled when no inputs are
+   provided.
+2. **Partial Input Validation:** The test simulates entering invalid email and password combinations step-by-step to
+   ensure that the button remains disabled until all conditions for validity are met.
+3. **Valid Input Validation:** Finally, the test validates that the login button becomes enabled only when both the
+   email and password meet the required validation criteria (a valid email format and a password of sufficient length).
+
+This test ensures that the **Login** composable correctly enforces input validation and enables the login button only
+under valid conditions.
+
 ### System Under Test
 
 ```kotlin
@@ -303,51 +316,48 @@ fun Login(onSuccess: (email: Email) -> Unit, viewModel: LoginViewModel = hiltVie
     if (viewModel.loginState == LoginState.LoginSuccess) onSuccess(viewModel.email)
   })
 
-  Column(
-    modifier = Modifier
-      .fillMaxSize()
-      .padding(MaterialTheme.appDimens.mediumContentPadding),
-    verticalArrangement = Arrangement.Center
-  ) {
-    Text(
-      modifier = Modifier.padding(bottom = MaterialTheme.appDimens.largeContentPadding),
-      text = stringResource(id = R.string.login),
-      style = MaterialTheme.typography.headlineMedium
-    )
+  Column {
+    Text(text = stringResource(id = R.string.login))
+      
     EmailInput(modifier = Modifier
       .semantics { testTagsAsResourceId = true;testTag = "emailInput" }
       .testTag("emailInput")
-      .fillMaxWidth()
-      .padding(bottom = MaterialTheme.appDimens.largeContentPadding),
+      .fillMaxWidth(),
       value = viewModel.email.value ?: "",
       isEnabled = viewModel.loginState !== LoginState.InProgress,
       onValueChange = viewModel::updateEmail)
+      
     PasswordInput(modifier = Modifier
       .semantics { testTagsAsResourceId = true;testTag = "passwordInput" }
-      .fillMaxWidth()
-      .padding(bottom = MaterialTheme.appDimens.mediumContentPadding),
+      .fillMaxWidth(),
       value = viewModel.password.value ?: "",
       isEnabled = viewModel.loginState !== LoginState.InProgress,
       onValueChange = viewModel::updatePassword)
-    if (viewModel.loginState === LoginState.LoginPending)
-      PrimaryButton(modifier = Modifier
-        .semantics { testTagsAsResourceId = true;testTag = "loginButton" }
-        .fillMaxWidth(),
-        text = stringResource(id = R.string.login),
-        enabled = viewModel.isLoginButtonEnabled,
-        onClick = viewModel::login)
-    if (viewModel.loginState === LoginState.InProgress)
-      CircularProgressIndicator(
-        modifier = Modifier
-          .semantics { testTagsAsResourceId = true;testTag = "progressLoader" }
-          .align(Alignment.CenterHorizontally)
-          .padding(MaterialTheme.appDimens.smallContentPadding)
-      )
+      
+    if (viewModel.loginState === LoginState.LoginPending){
+        PrimaryButton(modifier = Modifier
+            .semantics { testTagsAsResourceId = true;testTag = "loginButton" }
+            .fillMaxWidth(),
+            text = stringResource(id = R.string.login),
+            enabled = viewModel.isLoginButtonEnabled,
+            onClick = viewModel::login)
+    }
+      
+    if (viewModel.loginState === LoginState.InProgress){
+        CircularProgressIndicator(
+            modifier = Modifier
+                .semantics { testTagsAsResourceId = true;testTag = "progressLoader" }
+                .align(Alignment.CenterHorizontally)
+        )
+    }
   }
 }
 ```
 
 ### Test
+
+* This is a Compose UI **unit test** that runs on the **JVM**. Therefore, the code must be placed
+  inside `app/src/test/java/../LoginKtTest.kt` .
 
 ```kotlin
 @RunWith(RobolectricTestRunner::class)
@@ -388,18 +398,6 @@ class LoginKtTest {
 ### Dependencies
 
 ```
-// Allows us to create and configure mock objects, stub methods, verify method invocations, and more
-androidTestImplementation("io.mockk:mockk-agent:1.13.5")
-androidTestImplementation("io.mockk:mockk-android:1.13.5")
-androidTestImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
-
-// Assertion library
-androidTestImplementation("com.google.truth:truth:1.1.4")
-
-// Needed for createComposeRule , createAndroidComposeRule and other rules used to perform UI test
-testImplementation("androidx.compose.ui:ui-test-junit4:$compose_version") // used with robolectric to run ui test on jvm
-androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_version") // used with AndroidTestRunner to run ui test on virtual/physical device.
-
 // Needed for createComposeRule(), but not for createAndroidComposeRule<YourActivity>():
 debugImplementation("androidx.compose.ui:ui-test-manifest:$compose_version")
 
@@ -476,51 +474,45 @@ activity, `createAndroidComposeRule`.
 @Composable
 fun Login(onSuccess: (email: Email) -> Unit, viewModel: LoginViewModel = hiltViewModel()) {
 
-  LaunchedEffect(key1 = viewModel.loginState, block = {
-    if (viewModel.loginState == LoginState.LoginSuccess) onSuccess(viewModel.email)
-  })
+    LaunchedEffect(key1 = viewModel.loginState, block = {
+        if (viewModel.loginState == LoginState.LoginSuccess) onSuccess(viewModel.email)
+    })
 
-  Column(
-    modifier = Modifier
-      .fillMaxSize()
-      .padding(MaterialTheme.appDimens.mediumContentPadding),
-    verticalArrangement = Arrangement.Center
-  ) {
-    Text(
-      modifier = Modifier.padding(bottom = MaterialTheme.appDimens.largeContentPadding),
-      text = stringResource(id = R.string.login),
-      style = MaterialTheme.typography.headlineMedium
-    )
-    EmailInput(modifier = Modifier
-      .semantics { testTagsAsResourceId = true;testTag = "emailInput" }
-      .testTag("emailInput")
-      .fillMaxWidth()
-      .padding(bottom = MaterialTheme.appDimens.largeContentPadding),
-      value = viewModel.email.value ?: "",
-      isEnabled = viewModel.loginState !== LoginState.InProgress,
-      onValueChange = viewModel::updateEmail)
-    PasswordInput(modifier = Modifier
-      .semantics { testTagsAsResourceId = true;testTag = "passwordInput" }
-      .fillMaxWidth()
-      .padding(bottom = MaterialTheme.appDimens.mediumContentPadding),
-      value = viewModel.password.value ?: "",
-      isEnabled = viewModel.loginState !== LoginState.InProgress,
-      onValueChange = viewModel::updatePassword)
-    if (viewModel.loginState === LoginState.LoginPending)
-      PrimaryButton(modifier = Modifier
-        .semantics { testTagsAsResourceId = true;testTag = "loginButton" }
-        .fillMaxWidth(),
-        text = stringResource(id = R.string.login),
-        enabled = viewModel.isLoginButtonEnabled,
-        onClick = viewModel::login)
-    if (viewModel.loginState === LoginState.InProgress)
-      CircularProgressIndicator(
-        modifier = Modifier
-          .semantics { testTagsAsResourceId = true;testTag = "progressLoader" }
-          .align(Alignment.CenterHorizontally)
-          .padding(MaterialTheme.appDimens.smallContentPadding)
-      )
-  }
+    Column {
+        Text(text = stringResource(id = R.string.login))
+
+        EmailInput(modifier = Modifier
+            .semantics { testTagsAsResourceId = true;testTag = "emailInput" }
+            .testTag("emailInput")
+            .fillMaxWidth(),
+            value = viewModel.email.value ?: "",
+            isEnabled = viewModel.loginState !== LoginState.InProgress,
+            onValueChange = viewModel::updateEmail)
+
+        PasswordInput(modifier = Modifier
+            .semantics { testTagsAsResourceId = true;testTag = "passwordInput" }
+            .fillMaxWidth(),
+            value = viewModel.password.value ?: "",
+            isEnabled = viewModel.loginState !== LoginState.InProgress,
+            onValueChange = viewModel::updatePassword)
+
+        if (viewModel.loginState === LoginState.LoginPending) {
+            PrimaryButton(modifier = Modifier
+                .semantics { testTagsAsResourceId = true;testTag = "loginButton" }
+                .fillMaxWidth(),
+                text = stringResource(id = R.string.login),
+                enabled = viewModel.isLoginButtonEnabled,
+                onClick = viewModel::login)
+        }
+
+        if (viewModel.loginState === LoginState.InProgress) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .semantics { testTagsAsResourceId = true;testTag = "progressLoader" }
+                    .align(Alignment.CenterHorizontally)
+            )
+        }
+    }
 }
 ```
 
@@ -571,8 +563,15 @@ class LoginKtTest {
 ### Dependencies
 
 ```
+// Allows us to create and configure mock objects, stub methods, verify method invocations, and more
+androidTestImplementation("io.mockk:mockk-agent:1.13.5")
+androidTestImplementation("io.mockk:mockk-android:1.13.5")
+androidTestImplementation("org.mockito.kotlin:mockito-kotlin:5.4.0")
+
+// Assertion library
+androidTestImplementation("com.google.truth:truth:1.1.4")
+
 // Needed for createComposeRule , createAndroidComposeRule and other rules used to perform UI test
-testImplementation("androidx.compose.ui:ui-test-junit4:$compose_version") // used with robolectric to run ui test on jvm
 androidTestImplementation("androidx.compose.ui:ui-test-junit4:$compose_version") // used with AndroidTestRunner to run ui test on virtual/physical device.
 
 // Required to add androidx.activity.ComponentActivity to test manifest.
